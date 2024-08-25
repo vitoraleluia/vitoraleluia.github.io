@@ -1,0 +1,8 @@
+homepage.layout = "profile"
+colorScheme = "Fire"
+defaultAppearance = "dark"
+autoSwitchAppearance = "false"
+footer.showCopyright = "false"
+footer.showThemeAttribution = "false"
+article.showAuthor = "false"
+article.showTableOfContents = "true"

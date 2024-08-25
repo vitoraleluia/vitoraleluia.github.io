@@ -1,0 +1,12 @@
+title = "Vitor Aleluia"
+
+[params.author]
+name = "Vitor Aleluia"
+image = "img/profile.png"
+headline = "Software Engineer"
+links = [
+    { email = "mailto:vitoraleluia@outlook.pt" },
+    { linkedin = "https://www.linkedin.com/in/vitoraleluia" },
+    { github = "https://github.com/vitoraleluia" },
+    { cv = "/cv.pdf" },
+]

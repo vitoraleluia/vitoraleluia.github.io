@@ -1,0 +1,4 @@
+theme = 'congo'
+baseURL = 'https://vitoraleluia.github.io'
+languageCode = 'en-us'
+title = 'Vitor Aleluia'
