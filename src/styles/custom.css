@@ -1,0 +1,149 @@
+/* Google / Fontsource Fonts */
+@import '@fontsource/outfit/400.css';
+@import '@fontsource/outfit/500.css';
+@import '@fontsource/outfit/600.css';
+@import '@fontsource/outfit/700.css';
+@import '@fontsource/baskervville/400.css';
+@import '@fontsource/baskervville/400-italic.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/jetbrains-mono/600.css';
+
+:root {
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Baskervville', Georgia, Cambria, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Starlight font overrides */
+  --sl-font: var(--font-sans);
+  --sl-font-mono: var(--font-mono);
+
+  /* Blog Theme Accent - Warm Amber / Copper inspired by Akita on Rails */
+  --blog-accent: #e2a05a;
+  --blog-accent-hover: #f2bd82;
+  --blog-accent-subtle: rgba(226, 160, 90, 0.14);
+  --blog-border: rgba(255, 255, 255, 0.08);
+  --blog-card-bg: rgba(255, 255, 255, 0.025);
+  --blog-card-hover: rgba(255, 255, 255, 0.05);
+
+  /* Starlight Theme Customization - Dark Mode by default */
+  --sl-color-accent-low: rgba(226, 160, 90, 0.16);
+  --sl-color-accent: #e2a05a;
+  --sl-color-accent-high: #f2bd82;
+  --sl-color-white: #ededed;
+  --sl-color-gray-1: #d4d4d8;
+  --sl-color-gray-2: #a1a1aa;
+  --sl-color-gray-3: #71717a;
+  --sl-color-gray-4: #3f3f46;
+  --sl-color-gray-5: #27272a;
+  --sl-color-gray-6: #18181b;
+  --sl-color-black: #121214;
+  --sl-color-bg: #121214;
+  --sl-color-bg-nav: #121214;
+
+  /* Button Primary High-Contrast Variables */
+  --btn-primary-bg: #e2a05a;
+  --btn-primary-hover: #f2bd82;
+  --btn-primary-text: #121214;
+}
+
+/* Light mode adjustments if user chooses light mode */
+:root[data-theme='light'] {
+  --blog-accent: #b45309;
+  --blog-accent-hover: #92400e;
+  --blog-accent-subtle: rgba(180, 83, 9, 0.1);
+  --blog-border: rgba(0, 0, 0, 0.09);
+  --blog-card-bg: rgba(0, 0, 0, 0.02);
+  --blog-card-hover: rgba(0, 0, 0, 0.04);
+
+  --sl-color-accent-low: rgba(180, 83, 9, 0.15);
+  --sl-color-accent: #b45309;
+  --sl-color-accent-high: #78350f;
+  --sl-color-white: #18181b;
+  --sl-color-gray-1: #27272a;
+  --sl-color-gray-2: #3f3f46;
+  --sl-color-gray-3: #71717a;
+  --sl-color-gray-4: #a1a1aa;
+  --sl-color-gray-5: #e4e4e7;
+  --sl-color-gray-6: #f4f4f5;
+  --sl-color-black: #fafafa;
+  --sl-color-bg: #fafafa;
+  --sl-color-bg-nav: #ffffff;
+
+  /* Button Primary in Light Mode: crisp white text on warm dark-amber */
+  --btn-primary-bg: #b45309;
+  --btn-primary-hover: #92400e;
+  --btn-primary-text: #ffffff;
+}
+
+/* Global Typography */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--sl-color-bg);
+  color: var(--sl-color-gray-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings use Outfit */
+h1, h2, h3, h4, h5, h6,
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Code and Monospaced elements use JetBrains Mono */
+code, pre, kbd, samp,
+.expressive-code,
+.expressive-code pre,
+.expressive-code code {
+  font-family: var(--font-mono) !important;
+}
+
+/* Hide Starlight's default documentation page title header on custom splash pages */
+.content-panel:has(> .sl-container > #_top) {
+  display: none !important;
+}
+
+/* Hide empty doc footer */
+main footer.sl-flex:empty,
+main footer.sl-flex:has(> .meta:empty):has(> .pagination-links:empty) {
+  display: none !important;
+}
+
+/* Remove side padding on main pane so custom layout reaches intended widths */
+.main-pane {
+  padding-inline: 0 !important;
+}
+
+.content-panel {
+  padding: 0 !important;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sl-color-gray-5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sl-color-gray-4);
+}
+
+/* Text Selection */
+::selection {
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-accent-high);
+}

@@ -1,0 +1,365 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import Avatar from '../components/Avatar.astro';
+import SocialIcons from '../components/SocialIcons.astro';
+import { siteConfig } from '../site.config';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const recentPosts = allPosts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+---
+
+<StarlightPage frontmatter={{ title: siteConfig.title, template: 'splash' }}>
+  <div class="home-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-avatar">
+        <Avatar size="xl" />
+      </div>
+      <div class="hero-content">
+        <h1 class="hero-title">{siteConfig.name}</h1>
+        <p class="hero-role">{siteConfig.role} &bull; {siteConfig.location}</p>
+        <p class="hero-bio">
+          {siteConfig.bio}
+        </p>
+        <p class="hero-description">
+          I write technical articles about distributed systems, backend reliability, and developer tooling.
+        </p>
+        
+        <div class="hero-actions">
+          <a href="/blog/" class="btn btn-primary">
+            Read Blog
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          <a href="/links/" class="btn btn-secondary">
+            Links
+          </a>
+          <a href={siteConfig.cvUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+            CV (PDF)
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Posts Section -->
+    <section class="recent-posts-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Recent Posts</h2>
+        </div>
+        <a href="/blog/" class="view-all-link">
+          All posts ({allPosts.length}) &rarr;
+        </a>
+      </div>
+
+      <div class="posts-list">
+        {recentPosts.map((post) => (
+          <article class="post-card">
+            <div class="post-meta">
+              <time datetime={post.data.pubDate.toISOString()} class="post-date">
+                {formatDate(post.data.pubDate)}
+              </time>
+              <div class="post-tags">
+                {post.data.tags.map((tag) => (
+                  <span class="tag-pill">#{tag}</span>
+                ))}
+              </div>
+            </div>
+            <h3 class="post-title">
+              <a href={`/blog/${post.id}/`} class="post-title-link">
+                {post.data.title}
+              </a>
+            </h3>
+            <p class="post-description">{post.data.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Connect / Contact Section -->
+    <section class="connect-section">
+      <h2 class="connect-title">Contact & Links</h2>
+      <div class="connect-links">
+        {siteConfig.socialLinks.map((item) => (
+          <a
+            href={item.href}
+            target={item.href.startsWith('http') ? '_blank' : undefined}
+            rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            class="social-badge"
+          >
+            <SocialIcons icon={item.icon} size={15} />
+            <span>{item.label}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</StarlightPage>
+
+<style>
+  .home-container {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.75rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--sl-color-gray-5, #27272a);
+  }
+
+  @media (min-width: 640px) {
+    .hero-section {
+      flex-direction: row;
+      align-items: center;
+      gap: 2.25rem;
+    }
+  }
+
+  .hero-avatar {
+    flex-shrink: 0;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .hero-title {
+    font-size: 2.25rem;
+    line-height: 1.15;
+    margin: 0;
+    letter-spacing: -0.02em;
+    color: var(--sl-color-white, #ededed);
+  }
+
+  .hero-role {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--sl-color-accent, #e2a05a);
+    margin: 0;
+    font-family: var(--font-mono);
+  }
+
+  .hero-bio {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--sl-color-gray-1, #d4d4d8);
+    margin: 0;
+  }
+
+  .hero-description {
+    font-size: 0.925rem;
+    line-height: 1.55;
+    color: var(--sl-color-gray-3, #71717a);
+    margin: 0;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .btn-primary {
+    background-color: var(--btn-primary-bg, var(--sl-color-accent));
+    color: var(--btn-primary-text, #121214) !important;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--btn-primary-hover, var(--sl-color-accent-high));
+    color: var(--btn-primary-text, #121214) !important;
+  }
+
+  .btn-secondary {
+    background-color: var(--sl-color-gray-6, #18181b);
+    color: var(--sl-color-white, #ededed) !important;
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--sl-color-gray-4, #3f3f46);
+    background-color: var(--sl-color-gray-5, #27272a);
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: var(--sl-color-gray-2, #a1a1aa) !important;
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+  }
+
+  .btn-outline:hover {
+    color: var(--sl-color-accent, #e2a05a) !important;
+    border-color: var(--sl-color-accent, #e2a05a);
+  }
+
+  /* Recent Posts Section */
+  .recent-posts-section {
+    padding: 2.75rem 0;
+    border-bottom: 1px solid var(--sl-color-gray-5, #27272a);
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.35rem;
+    margin: 0;
+    color: var(--sl-color-white, #ededed);
+  }
+
+  .view-all-link {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--sl-color-accent, #e2a05a);
+    text-decoration: none;
+  }
+
+  .view-all-link:hover {
+    text-decoration: underline;
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .post-card {
+    padding: 1.15rem 1.25rem;
+    background-color: var(--sl-color-gray-6, rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+    border-radius: 8px;
+    transition: border-color 0.15s ease;
+  }
+
+  .post-card:hover {
+    border-color: var(--sl-color-accent, #e2a05a);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.775rem;
+    color: var(--sl-color-gray-3, #71717a);
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .tag-pill {
+    font-size: 0.725rem;
+    color: var(--sl-color-gray-3, #71717a);
+    font-family: var(--font-mono);
+  }
+
+  .post-title {
+    font-size: 1.15rem;
+    margin: 0 0 0.35rem;
+    line-height: 1.35;
+  }
+
+  .post-title-link {
+    color: var(--sl-color-white, #ededed);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .post-title-link:hover {
+    color: var(--sl-color-accent, #e2a05a);
+  }
+
+  .post-description {
+    font-size: 0.925rem;
+    line-height: 1.5;
+    color: var(--sl-color-gray-2, #a1a1aa);
+    margin: 0;
+  }
+
+  /* Connect Section */
+  .connect-section {
+    padding-top: 2.75rem;
+  }
+
+  .connect-title {
+    font-size: 1.25rem;
+    margin: 0 0 1rem;
+    color: var(--sl-color-white, #ededed);
+  }
+
+  .connect-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .social-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.825rem;
+    font-weight: 500;
+    color: var(--sl-color-gray-2, #a1a1aa);
+    background-color: var(--sl-color-gray-6, #18181b);
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .social-badge:hover {
+    color: var(--sl-color-accent, #e2a05a);
+    border-color: var(--sl-color-accent, #e2a05a);
+  }
+</style>

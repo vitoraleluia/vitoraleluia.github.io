@@ -1,0 +1,323 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const sorted = posts.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+
+  return sorted.map((post, index) => {
+    const prevPost = index < sorted.length - 1 ? sorted[index + 1] : null;
+    const nextPost = index > 0 ? sorted[index - 1] : null;
+    return {
+      params: { slug: post.id },
+      props: { post, prevPost, nextPost },
+    };
+  });
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content } = await render(post);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+function calculateReadingTime(content: string) {
+  const words = content.split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(words / 200));
+  return `${minutes} min read`;
+}
+---
+
+<StarlightPage
+  frontmatter={{
+    title: `${post.data.title} — Vitor Aleluia`,
+    description: post.data.description,
+    template: 'splash',
+  }}
+>
+  <div class="article-page-wrapper">
+    <div class="article-container">
+      <!-- Breadcrumb navigation -->
+      <nav class="article-nav" aria-label="Breadcrumb">
+        <a href="/blog/" class="back-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to all articles
+        </a>
+      </nav>
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <div class="article-meta">
+          <time datetime={post.data.pubDate.toISOString()} class="article-date">
+            {formatDate(post.data.pubDate)}
+          </time>
+          <span class="meta-dot">&bull;</span>
+          <span class="article-reading-time">{calculateReadingTime(post.body || '')}</span>
+          <span class="meta-dot">&bull;</span>
+          <span class="article-author">{post.data.author}</span>
+        </div>
+
+        <h1 class="article-title">{post.data.title}</h1>
+
+        <div class="article-tags">
+          {post.data.tags.map((tag) => (
+            <span class="tag-pill">#{tag}</span>
+          ))}
+        </div>
+      </header>
+
+      <!-- Article Content (Baskervville serif font for editorial reading) -->
+      <div class="article-content">
+        <Content />
+      </div>
+
+      <!-- Post Footer / Next & Previous Navigation -->
+      <footer class="article-footer">
+        <div class="prev-next-grid">
+          {prevPost ? (
+            <a href={`/blog/${prevPost.id}/`} class="prev-next-card prev-card">
+              <span class="card-direction">&larr; Older Article</span>
+              <span class="card-title">{prevPost.data.title}</span>
+            </a>
+          ) : (
+            <div class="empty-card"></div>
+          )}
+
+          {nextPost ? (
+            <a href={`/blog/${nextPost.id}/`} class="prev-next-card next-card">
+              <span class="card-direction">Newer Article &rarr;</span>
+              <span class="card-title">{nextPost.data.title}</span>
+            </a>
+          ) : (
+            <div class="empty-card"></div>
+          )}
+        </div>
+
+        <div class="footer-actions">
+          <a href="/blog/" class="footer-back-link">
+            &larr; Return to Blog Directory
+          </a>
+          <a href="#_top" class="back-to-top">
+            Back to Top &uarr;
+          </a>
+        </div>
+      </footer>
+    </div>
+  </div>
+</StarlightPage>
+
+<style>
+  .article-page-wrapper {
+    width: 100%;
+    padding: 2rem 1rem 5rem;
+  }
+
+  .article-container {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .article-nav {
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: var(--sl-color-accent, #e2a05a);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .article-header {
+    padding-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--sl-color-gray-5, #27272a);
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.825rem;
+    color: var(--sl-color-gray-3, #71717a);
+    margin-bottom: 0.85rem;
+  }
+
+  .meta-dot {
+    opacity: 0.5;
+  }
+
+  .article-title {
+    font-size: 2.4rem;
+    line-height: 1.2;
+    color: var(--sl-color-white, #ededed);
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .tag-pill {
+    font-family: var(--font-mono);
+    font-size: 0.775rem;
+    color: var(--sl-color-gray-2, #a1a1aa);
+    background-color: var(--sl-color-gray-6, #18181b);
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
+  }
+
+  /* Article Content Styling */
+  .article-content {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    line-height: 1.85;
+    color: var(--sl-color-gray-1, #e4e4e7);
+  }
+
+  .article-content :global(h2) {
+    font-family: var(--font-sans);
+    font-size: 1.6rem;
+    margin: 2.5rem 0 1rem;
+    color: var(--sl-color-white, #ededed);
+    border-bottom: 1px solid var(--sl-color-gray-5, #27272a);
+    padding-bottom: 0.4rem;
+  }
+
+  .article-content :global(h3) {
+    font-family: var(--font-sans);
+    font-size: 1.3rem;
+    margin: 2rem 0 0.75rem;
+    color: var(--sl-color-white, #ededed);
+  }
+
+  .article-content :global(p) {
+    margin-bottom: 1.5rem;
+  }
+
+  .article-content :global(ul),
+  .article-content :global(ol) {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .article-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .article-content :global(blockquote) {
+    border-left: 3px solid var(--sl-color-accent, #e2a05a);
+    padding-left: 1.25rem;
+    margin: 1.75rem 0;
+    color: var(--sl-color-gray-2, #a1a1aa);
+    font-style: italic;
+  }
+
+  .article-content :global(code) {
+    font-family: var(--font-mono) !important;
+    font-size: 0.88em;
+  }
+
+  .article-content :global(pre) {
+    margin: 1.75rem 0;
+    border-radius: 8px;
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+  }
+
+  /* Article Footer */
+  .article-footer {
+    margin-top: 4rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--sl-color-gray-5, #27272a);
+  }
+
+  .prev-next-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .prev-next-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .prev-next-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.25rem;
+    background-color: var(--sl-color-gray-6, rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .prev-next-card:hover {
+    border-color: var(--sl-color-accent, #e2a05a);
+  }
+
+  .next-card {
+    text-align: right;
+  }
+
+  .card-direction {
+    font-family: var(--font-mono);
+    font-size: 0.775rem;
+    color: var(--sl-color-accent, #e2a05a);
+  }
+
+  .card-title {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--sl-color-white, #ededed);
+    line-height: 1.35;
+  }
+
+  .footer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--sl-color-gray-3, #71717a);
+  }
+
+  .footer-back-link,
+  .back-to-top {
+    color: var(--sl-color-gray-2, #a1a1aa);
+    text-decoration: none;
+  }
+
+  .footer-back-link:hover,
+  .back-to-top:hover {
+    color: var(--sl-color-accent, #e2a05a);
+  }
+</style>

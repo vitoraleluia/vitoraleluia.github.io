@@ -10,11 +10,21 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/starlight": "^0.42.1",
+    "@fontsource/baskervville": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/outfit": "^5.3.0",
     "astro": "^7.2.10",
+    "markdown-it": "^15.0.2",
+    "sanitize-html": "^2.17.7",
     "sharp": "^0.35.3"
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.2.0",
+    "@types/sanitize-html": "^2.16.1"
   }
 }

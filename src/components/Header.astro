@@ -1,0 +1,395 @@
+---
+import { siteConfig } from '../site.config';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+
+const pathname = Astro.url.pathname;
+const isCurrent = (href: string) => {
+  if (href === '/') return pathname === '/' || pathname === '';
+  return pathname.startsWith(href);
+};
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <!-- Brand / Name -->
+    <div class="header-left">
+      <a href="/" class="brand-link">
+        <span class="brand-symbol">~</span>
+        <span class="brand-name">{siteConfig.name}</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav" aria-label="Main Navigation">
+        {siteConfig.navLinks.map((link) => (
+          <a
+            href={link.href}
+            target={link.target}
+            rel={link.rel}
+            class={`nav-link ${isCurrent(link.href) ? 'active' : ''} ${link.label === 'CV' ? 'cv-link' : ''}`}
+            aria-current={isCurrent(link.href) ? 'page' : undefined}
+          >
+            {link.label}
+            {link.target === '_blank' && (
+              <svg class="external-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            )}
+          </a>
+        ))}
+      </nav>
+    </div>
+
+    <!-- Right Controls: DuckDuckGo Search + Theme Toggle -->
+    <div class="header-right">
+      <!-- Akita-style DuckDuckGo Search Form -->
+      <form
+        id="ddg-search-form"
+        class="ddg-search"
+        role="search"
+        action="https://duckduckgo.com/"
+        method="get"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg class="ddg-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          id="ddg-search-input"
+          type="search"
+          name="user_query"
+          placeholder="Search (DuckDuckGo)..."
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Search this blog using DuckDuckGo"
+        />
+        <input type="hidden" name="q" id="ddg-final-query" value="" />
+        <kbd class="ddg-kbd" aria-hidden="true">Ctrl K</kbd>
+      </form>
+
+      <div class="theme-wrapper">
+        <ThemeSelect />
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button
+        id="mobile-nav-toggle"
+        class="mobile-toggle"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+      >
+        <svg class="hamburger-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile Navigation" hidden>
+    <div class="mobile-nav-links">
+      {siteConfig.navLinks.map((link) => (
+        <a
+          href={link.href}
+          target={link.target}
+          rel={link.rel}
+          class={`mobile-nav-link ${isCurrent(link.href) ? 'active' : ''}`}
+          aria-current={isCurrent(link.href) ? 'page' : undefined}
+        >
+          <span>{link.label}</span>
+          {link.target === '_blank' && (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          )}
+        </a>
+      ))}
+    </div>
+  </nav>
+</header>
+
+<script>
+  const domain = 'vitoraleluia.com';
+  const form = document.getElementById('ddg-search-form') as HTMLFormElement | null;
+  const input = document.getElementById('ddg-search-input') as HTMLInputElement | null;
+  const hiddenQ = document.getElementById('ddg-final-query') as HTMLInputElement | null;
+
+  if (form && input && hiddenQ) {
+    form.addEventListener('submit', (e) => {
+      const val = input.value.trim();
+      if (!val) {
+        e.preventDefault();
+        return;
+      }
+      // Set the query: "site:vitoraleluia.com <query>"
+      hiddenQ.value = `site:${domain} ${val}`;
+      input.name = ''; // Don't submit the raw user_query param
+    });
+  }
+
+  // Ctrl+K / Cmd+K shortcut to focus search input
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      input?.focus();
+    }
+  });
+
+  // Mobile menu toggle
+  const toggleBtn = document.getElementById('mobile-nav-toggle');
+  const mobileMenu = document.getElementById('mobile-nav-menu');
+
+  if (toggleBtn && mobileMenu) {
+    toggleBtn.addEventListener('click', () => {
+      const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      toggleBtn.setAttribute('aria-expanded', String(!isExpanded));
+      mobileMenu.hidden = isExpanded;
+      toggleBtn.classList.toggle('is-active', !isExpanded);
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    background-color: var(--sl-color-bg, #121214);
+    border-bottom: 1px solid var(--sl-color-gray-5, #27272a);
+  }
+
+  .header-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--sl-color-white, #ededed);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-link:hover {
+    color: var(--sl-color-accent, #e2a05a);
+  }
+
+  .brand-symbol {
+    color: var(--sl-color-accent, #e2a05a);
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+
+  .desktop-nav {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 680px) {
+    .desktop-nav {
+      display: flex;
+    }
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--sl-color-gray-2, #a1a1aa);
+    text-decoration: none;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--sl-color-white, #ededed);
+  }
+
+  .nav-link.active {
+    color: var(--sl-color-accent, #e2a05a);
+    font-weight: 600;
+  }
+
+  .cv-link {
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+    padding: 0.2rem 0.55rem;
+  }
+
+  .cv-link:hover {
+    border-color: var(--sl-color-accent, #e2a05a);
+    color: var(--sl-color-accent, #e2a05a);
+  }
+
+  .external-icon {
+    opacity: 0.6;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* DuckDuckGo Search input */
+  .ddg-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .ddg-search-icon {
+    position: absolute;
+    left: 0.65rem;
+    color: var(--sl-color-gray-3, #71717a);
+    pointer-events: none;
+  }
+
+  #ddg-search-input {
+    width: 11rem;
+    height: 2rem;
+    padding: 0.25rem 2.75rem 0.25rem 2rem;
+    font-size: 0.825rem;
+    font-family: var(--font-sans);
+    color: var(--sl-color-white, #ededed);
+    background-color: var(--sl-color-gray-6, #18181b);
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.15s ease, width 0.2s ease;
+  }
+
+  #ddg-search-input:focus {
+    width: 14rem;
+    border-color: var(--sl-color-accent, #e2a05a);
+  }
+
+  #ddg-search-input::placeholder {
+    color: var(--sl-color-gray-3, #71717a);
+  }
+
+  .ddg-kbd {
+    position: absolute;
+    right: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 0.1rem 0.35rem;
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+    border-radius: 4px;
+    color: var(--sl-color-gray-3, #71717a);
+    background-color: var(--sl-color-gray-6, #18181b);
+    pointer-events: none;
+  }
+
+  @media (max-width: 520px) {
+    #ddg-search-input {
+      width: 7.5rem;
+    }
+    #ddg-search-input:focus {
+      width: 9.5rem;
+    }
+    .ddg-kbd {
+      display: none;
+    }
+  }
+
+  .theme-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+    background: transparent;
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+    border-radius: 6px;
+    color: var(--sl-color-gray-2, #a1a1aa);
+    cursor: pointer;
+  }
+
+  @media (min-width: 680px) {
+    .mobile-toggle {
+      display: none;
+    }
+  }
+
+  .mobile-toggle:hover {
+    color: var(--sl-color-white, #ededed);
+    border-color: var(--sl-color-gray-4, #3f3f46);
+  }
+
+  .mobile-toggle .close-icon {
+    display: none;
+  }
+
+  .mobile-toggle.is-active .hamburger-icon {
+    display: none;
+  }
+
+  .mobile-toggle.is-active .close-icon {
+    display: block;
+  }
+
+  .mobile-nav {
+    border-top: 1px solid var(--sl-color-gray-5, #27272a);
+    background-color: var(--sl-color-bg, #121214);
+    padding: 0.75rem 1.5rem 1.25rem;
+  }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--sl-color-gray-2, #a1a1aa);
+    text-decoration: none;
+    border-radius: 6px;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active {
+    color: var(--sl-color-accent, #e2a05a);
+  }
+</style>
