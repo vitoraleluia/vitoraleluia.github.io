@@ -15,6 +15,7 @@ export default defineConfig({
 			components: {
 				Header: './src/components/Header.astro',
 				ThemeProvider: './src/components/ThemeProvider.astro',
+				ThemeSelect: './src/components/ThemeToggle.astro',
 			},
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/VitorAleluia' },

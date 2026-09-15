@@ -44,8 +44,8 @@ The website adapts the `@astrojs/starlight` template away from a documentation f
    - Direct links to the blog, links hub, and CV.
 2. **Blog Directory (`/blog`)**:
    - Complete directory of published posts.
-   - Tag filter chips and total post count.
-   - Clean rows displaying publication date, title, summary, reading time, and tags.
+   - Clean, minimalist rows displaying publication date, title, and summary (no tags, no reading time, and no post counts).
+   - RSS feed link badge aligned inline with the "Blog" section title.
 3. **Blog Post Reader (`/blog/[slug]`)**:
    - Optimized for reading comfort (max-width `48rem`).
    - Body typography in `Baskervville`.
@@ -54,13 +54,13 @@ The website adapts the `@astrojs/starlight` template away from a documentation f
 4. **Links Hub (`/links`)**:
    - Linktree-style page.
    - Centered profile avatar at the top, name, and role.
-   - Centered stack of interactive buttons linking to GitHub, LinkedIn, X/Twitter, CV, Email, and RSS.
+   - Centered stack of clean, icon-and-title interactive buttons linking to GitHub, LinkedIn, X/Twitter, CV, Email, and RSS (without secondary subtitle text).
 5. **Navbar & Akita-Style Search**:
    - Brand / Site title (`Vitor Aleluia`) linking to `/`.
    - Links to `Home`, `Blog`, `Links`, and `CV` (`/cv.pdf`).
    - **DuckDuckGo Site Search**: Exactly like Akita on Rails, a clean search input with a `Ctrl+K` shortcut that submits queries directly to DuckDuckGo scoped to `site:vitoraleluia.com`.
-   - Theme toggle (Dark / Light).
-   - Responsive mobile drawer.
+    - **Icon-Only Theme Toggle**: A button without text that cycles between Dark and Light mode. System preference (auto) is selected automatically by default on first visit without needing an explicit "Auto" option in the switcher.
+    - Responsive mobile drawer.
 
 ### 2.4 SEO, Sitemap & RSS Feed
 - **Prebuilt Sitemap**: Integrated via `@astrojs/sitemap`, automatically generating `sitemap-index.xml` and `sitemap-0.xml` for `https://vitoraleluia.com`.

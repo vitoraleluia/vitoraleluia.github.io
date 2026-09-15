@@ -2,32 +2,55 @@
 import { Icon } from '@astrojs/starlight/components';
 ---
 
-{/* Inlined to prevent flash of light theme and ensure dark mode by default */}
+{/* Inlined to prevent FOUC and ensure auto (system preference) by default */}
 <script is:inline>
 	window.StarlightThemeProvider = (() => {
 		const storedTheme =
 			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
-		// Default to dark mode unless user specifically saved 'light'
-		const theme = storedTheme === 'light' ? 'light' : 'dark';
+		
+		// Auto by default: use system preference if user hasn't chosen 'light' or 'dark'
+		const getSystemTheme = () =>
+			typeof window !== 'undefined' &&
+			window.matchMedia &&
+			window.matchMedia('(prefers-color-scheme: light)').matches
+				? 'light'
+				: 'dark';
+
+		const theme =
+			storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : getSystemTheme();
+
 		document.documentElement.dataset.theme = theme;
+
 		return {
-			updatePickers(t = storedTheme || 'dark') {
+			updatePickers(t = theme) {
+				const currentTheme = t || document.documentElement.dataset.theme;
+				const isDark = currentTheme !== 'light';
+				document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+					const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+					btn.setAttribute('aria-label', label);
+					btn.setAttribute('title', label);
+				});
+
+				// Compatibility with any Starlight theme-select elements
 				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
 					const select = picker.querySelector('select');
-					if (select) select.value = t;
-					/** @type {HTMLTemplateElement | null} */
-					const tmpl = document.querySelector('#theme-icons');
-					const newIcon = tmpl && tmpl.content.querySelector('.' + t);
-					if (newIcon) {
-						const oldIcon = picker.querySelector('svg.label-icon');
-						if (oldIcon) {
-							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
-						}
-					}
+					if (select) select.value = currentTheme;
 				});
 			},
 		};
 	})();
+
+	// Listen for system theme changes if user hasn't explicitly set a preference
+	if (typeof window !== 'undefined' && window.matchMedia) {
+		window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+			const stored = localStorage.getItem('starlight-theme');
+			if (!stored || (stored !== 'light' && stored !== 'dark')) {
+				const newTheme = e.matches ? 'light' : 'dark';
+				document.documentElement.dataset.theme = newTheme;
+				window.StarlightThemeProvider?.updatePickers?.(newTheme);
+			}
+		});
+	}
 </script>
 
 <template id="theme-icons">

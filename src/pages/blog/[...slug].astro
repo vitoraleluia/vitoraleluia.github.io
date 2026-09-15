@@ -28,12 +28,6 @@ function formatDate(date: Date) {
     day: 'numeric',
   });
 }
-
-function calculateReadingTime(content: string) {
-  const words = content.split(/\s+/).length;
-  const minutes = Math.max(1, Math.ceil(words / 200));
-  return `${minutes} min read`;
-}
 ---
 
 <StarlightPage
@@ -62,8 +56,6 @@ function calculateReadingTime(content: string) {
           <time datetime={post.data.pubDate.toISOString()} class="article-date">
             {formatDate(post.data.pubDate)}
           </time>
-          <span class="meta-dot">&bull;</span>
-          <span class="article-reading-time">{calculateReadingTime(post.body || '')}</span>
           <span class="meta-dot">&bull;</span>
           <span class="article-author">{post.data.author}</span>
         </div>

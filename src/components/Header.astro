@@ -1,6 +1,6 @@
 ---
 import { siteConfig } from '../site.config';
-import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import ThemeToggle from './ThemeToggle.astro';
 
 const pathname = Astro.url.pathname;
 const isCurrent = (href: string) => {
@@ -9,93 +9,115 @@ const isCurrent = (href: string) => {
 };
 ---
 
-<header class="site-header">
-  <div class="header-inner">
-    <!-- Brand / Name -->
-    <div class="header-left">
-      <a href="/" class="brand-link">
-        <span class="brand-symbol">~</span>
-        <span class="brand-name">{siteConfig.name}</span>
-      </a>
+<div class="header-container">
+  <!-- Brand / Name (No tilde) -->
+  <div class="header-left">
+    <a href="/" class="brand-link">
+      <span class="brand-name">{siteConfig.name}</span>
+    </a>
 
-      <!-- Desktop Nav -->
-      <nav class="desktop-nav" aria-label="Main Navigation">
-        {siteConfig.navLinks.map((link) => (
-          <a
-            href={link.href}
-            target={link.target}
-            rel={link.rel}
-            class={`nav-link ${isCurrent(link.href) ? 'active' : ''} ${link.label === 'CV' ? 'cv-link' : ''}`}
-            aria-current={isCurrent(link.href) ? 'page' : undefined}
-          >
-            {link.label}
-            {link.target === '_blank' && (
-              <svg class="external-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            )}
-          </a>
-        ))}
-      </nav>
-    </div>
-
-    <!-- Right Controls: DuckDuckGo Search + Theme Toggle -->
-    <div class="header-right">
-      <!-- Akita-style DuckDuckGo Search Form -->
-      <form
-        id="ddg-search-form"
-        class="ddg-search"
-        role="search"
-        action="https://duckduckgo.com/"
-        method="get"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <svg class="ddg-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input
-          id="ddg-search-input"
-          type="search"
-          name="user_query"
-          placeholder="Search (DuckDuckGo)..."
-          autocomplete="off"
-          spellcheck="false"
-          aria-label="Search this blog using DuckDuckGo"
-        />
-        <input type="hidden" name="q" id="ddg-final-query" value="" />
-        <kbd class="ddg-kbd" aria-hidden="true">Ctrl K</kbd>
-      </form>
-
-      <div class="theme-wrapper">
-        <ThemeSelect />
-      </div>
-
-      <!-- Mobile Menu Button -->
-      <button
-        id="mobile-nav-toggle"
-        class="mobile-toggle"
-        aria-label="Toggle navigation menu"
-        aria-expanded="false"
-      >
-        <svg class="hamburger-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-        <svg class="close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
+    <!-- Desktop Nav Links -->
+    <nav class="desktop-nav" aria-label="Main Navigation">
+      {siteConfig.navLinks.map((link) => (
+        <a
+          href={link.href}
+          target={link.target}
+          rel={link.rel}
+          class={`nav-link ${isCurrent(link.href) ? 'active' : ''} ${link.label === 'CV' ? 'cv-link' : ''}`}
+          aria-current={isCurrent(link.href) ? 'page' : undefined}
+        >
+          {link.label}
+          {link.target === '_blank' && (
+            <svg class="external-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          )}
+        </a>
+      ))}
+    </nav>
   </div>
 
-  <!-- Mobile Dropdown Menu -->
+  <!-- Right Controls: Desktop Search + Theme Toggle + Mobile Toggle -->
+  <div class="header-right">
+    <!-- Desktop DuckDuckGo Search (Hidden on mobile) -->
+    <form
+      id="ddg-search-form"
+      class="ddg-search desktop-search"
+      role="search"
+      action="https://duckduckgo.com/"
+      method="get"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg class="ddg-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        id="ddg-search-input"
+        type="search"
+        placeholder="Search (DuckDuckGo)..."
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Search this blog using DuckDuckGo"
+      />
+      <input type="hidden" name="q" id="ddg-final-query" value="" />
+      <kbd class="ddg-kbd" aria-hidden="true">Ctrl K</kbd>
+    </form>
+
+    <div class="theme-wrapper">
+      <ThemeToggle />
+    </div>
+
+    <!-- Mobile Hamburger Button -->
+    <button
+      id="mobile-nav-toggle"
+      class="mobile-toggle"
+      aria-label="Toggle navigation menu"
+      aria-expanded="false"
+      type="button"
+    >
+      <svg class="hamburger-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <svg class="close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Dropdown Menu (Contains Search on mobile) -->
   <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile Navigation" hidden>
+    <!-- Mobile DuckDuckGo Search Form -->
+    <form
+      id="mobile-ddg-search-form"
+      class="mobile-ddg-search"
+      role="search"
+      action="https://duckduckgo.com/"
+      method="get"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg class="ddg-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        id="mobile-ddg-search-input"
+        type="search"
+        placeholder="Search with DuckDuckGo..."
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Search this blog using DuckDuckGo"
+      />
+      <input type="hidden" name="q" id="mobile-ddg-final-query" value="" />
+    </form>
+
     <div class="mobile-nav-links">
       {siteConfig.navLinks.map((link) => (
         <a
@@ -117,67 +139,136 @@ const isCurrent = (href: string) => {
       ))}
     </div>
   </nav>
-</header>
+</div>
 
 <script>
   const domain = 'vitoraleluia.com';
-  const form = document.getElementById('ddg-search-form') as HTMLFormElement | null;
-  const input = document.getElementById('ddg-search-input') as HTMLInputElement | null;
-  const hiddenQ = document.getElementById('ddg-final-query') as HTMLInputElement | null;
 
-  if (form && input && hiddenQ) {
-    form.addEventListener('submit', (e) => {
-      const val = input.value.trim();
+  // Desktop search handler
+  const desktopForm = document.getElementById('ddg-search-form') as HTMLFormElement | null;
+  const desktopInput = document.getElementById('ddg-search-input') as HTMLInputElement | null;
+  const desktopHiddenQ = document.getElementById('ddg-final-query') as HTMLInputElement | null;
+
+  if (desktopForm && desktopInput && desktopHiddenQ) {
+    desktopForm.addEventListener('submit', (e) => {
+      const val = desktopInput.value.trim();
       if (!val) {
         e.preventDefault();
         return;
       }
-      // Set the query: "site:vitoraleluia.com <query>"
-      hiddenQ.value = `site:${domain} ${val}`;
-      input.name = ''; // Don't submit the raw user_query param
+      desktopHiddenQ.value = `site:${domain} ${val}`;
     });
   }
 
-  // Ctrl+K / Cmd+K shortcut to focus search input
+  // Mobile search handler
+  const mobileForm = document.getElementById('mobile-ddg-search-form') as HTMLFormElement | null;
+  const mobileInput = document.getElementById('mobile-ddg-search-input') as HTMLInputElement | null;
+  const mobileHiddenQ = document.getElementById('mobile-ddg-final-query') as HTMLInputElement | null;
+
+  if (mobileForm && mobileInput && mobileHiddenQ) {
+    mobileForm.addEventListener('submit', (e) => {
+      const val = mobileInput.value.trim();
+      if (!val) {
+        e.preventDefault();
+        return;
+      }
+      mobileHiddenQ.value = `site:${domain} ${val}`;
+    });
+  }
+
+  // Ctrl+K / Cmd+K shortcut
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
-      input?.focus();
+      if (window.innerWidth >= 680) {
+        desktopInput?.focus();
+      } else {
+        const toggleBtn = document.getElementById('mobile-nav-toggle');
+        const mobileMenu = document.getElementById('mobile-nav-menu');
+        if (toggleBtn && mobileMenu && (mobileMenu.hidden || !mobileMenu.classList.contains('is-open'))) {
+          toggleBtn.click();
+        }
+        setTimeout(() => {
+          mobileInput?.focus();
+        }, 50);
+      }
     }
   });
 
-  // Mobile menu toggle
-  const toggleBtn = document.getElementById('mobile-nav-toggle');
-  const mobileMenu = document.getElementById('mobile-nav-menu');
+  // Mobile menu toggle & interactions
+  const toggleBtn = document.getElementById('mobile-nav-toggle') as HTMLButtonElement | null;
+  const mobileMenu = document.getElementById('mobile-nav-menu') as HTMLElement | null;
 
   if (toggleBtn && mobileMenu) {
-    toggleBtn.addEventListener('click', () => {
+    const openMenu = () => {
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      toggleBtn.classList.add('is-active');
+      mobileMenu.classList.add('is-open');
+      mobileMenu.removeAttribute('hidden');
+    };
+
+    const closeMenu = () => {
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      toggleBtn.classList.remove('is-active');
+      mobileMenu.classList.remove('is-open');
+      mobileMenu.setAttribute('hidden', '');
+    };
+
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
-      toggleBtn.setAttribute('aria-expanded', String(!isExpanded));
-      mobileMenu.hidden = isExpanded;
-      toggleBtn.classList.toggle('is-active', !isExpanded);
+      if (isExpanded) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    // Close when clicking outside header container
+    document.addEventListener('click', (e) => {
+      if (toggleBtn.getAttribute('aria-expanded') === 'true') {
+        const target = e.target as Node;
+        if (!toggleBtn.contains(target) && !mobileMenu.contains(target)) {
+          closeMenu();
+        }
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggleBtn.getAttribute('aria-expanded') === 'true') {
+        closeMenu();
+        toggleBtn.focus();
+      }
+    });
+
+    // Close on window resize to desktop viewport
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 680 && toggleBtn.getAttribute('aria-expanded') === 'true') {
+        closeMenu();
+      }
+    });
+
+    // Close menu when clicking any navigation link inside mobile menu
+    mobileMenu.querySelectorAll('.mobile-nav-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        closeMenu();
+      });
     });
   }
 </script>
 
 <style>
-  .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
+  .header-container {
     width: 100%;
-    background-color: var(--sl-color-bg, #121214);
-    border-bottom: 1px solid var(--sl-color-gray-5, #27272a);
-  }
-
-  .header-inner {
     max-width: 78rem;
+    height: 100%;
     margin: 0 auto;
-    padding: 0.75rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
+    position: relative;
   }
 
   .header-left {
@@ -189,23 +280,17 @@ const isCurrent = (href: string) => {
   .brand-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
     font-family: var(--font-sans);
     font-size: 1.15rem;
     font-weight: 700;
     color: var(--sl-color-white, #ededed);
     text-decoration: none;
     letter-spacing: -0.01em;
+    transition: color 0.15s ease;
   }
 
   .brand-link:hover {
     color: var(--sl-color-accent, #e2a05a);
-  }
-
-  .brand-symbol {
-    color: var(--sl-color-accent, #e2a05a);
-    font-family: var(--font-mono);
-    font-weight: 700;
   }
 
   .desktop-nav {
@@ -262,11 +347,17 @@ const isCurrent = (href: string) => {
     gap: 0.75rem;
   }
 
-  /* DuckDuckGo Search input */
-  .ddg-search {
+  /* Desktop DuckDuckGo Search */
+  .desktop-search {
     position: relative;
-    display: flex;
+    display: none;
     align-items: center;
+  }
+
+  @media (min-width: 680px) {
+    .desktop-search {
+      display: flex;
+    }
   }
 
   .ddg-search-icon {
@@ -312,38 +403,34 @@ const isCurrent = (href: string) => {
     pointer-events: none;
   }
 
-  @media (max-width: 520px) {
-    #ddg-search-input {
-      width: 7.5rem;
-    }
-    #ddg-search-input:focus {
-      width: 9.5rem;
-    }
-    .ddg-kbd {
-      display: none;
-    }
-  }
-
   .theme-wrapper {
     display: flex;
     align-items: center;
   }
 
+  /* Mobile menu button */
   .mobile-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.35rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
     background: transparent;
     border: 1px solid var(--sl-color-gray-5, #27272a);
     border-radius: 6px;
     color: var(--sl-color-gray-2, #a1a1aa);
     cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .mobile-toggle svg {
+    pointer-events: none;
   }
 
   @media (min-width: 680px) {
     .mobile-toggle {
-      display: none;
+      display: none !important;
     }
   }
 
@@ -364,24 +451,83 @@ const isCurrent = (href: string) => {
     display: block;
   }
 
+  /* Mobile Dropdown Menu */
   .mobile-nav {
-    border-top: 1px solid var(--sl-color-gray-5, #27272a);
+    display: none;
+    position: fixed;
+    top: var(--sl-nav-height, 3.75rem);
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: calc(100vh - var(--sl-nav-height, 3.75rem));
+    overflow-y: auto;
     background-color: var(--sl-color-bg, #121214);
-    padding: 0.75rem 1.5rem 1.25rem;
+    border-bottom: 1px solid var(--sl-color-gray-5, #27272a);
+    padding: 1.25rem 1.25rem 1.5rem;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    z-index: 99;
+  }
+
+  @media (max-width: 679px) {
+    .mobile-nav.is-open:not([hidden]) {
+      display: flex;
+    }
+  }
+
+  .mobile-nav[hidden] {
+    display: none !important;
+  }
+
+  @media (min-width: 680px) {
+    .mobile-nav,
+    .mobile-nav.is-open,
+    .mobile-nav[hidden] {
+      display: none !important;
+    }
+  }
+
+  .mobile-ddg-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  #mobile-ddg-search-input {
+    width: 100%;
+    height: 2.35rem;
+    padding: 0.35rem 1rem 0.35rem 2.25rem;
+    font-size: 0.9rem;
+    font-family: var(--font-sans);
+    color: var(--sl-color-white, #ededed);
+    background-color: var(--sl-color-gray-6, #18181b);
+    border: 1px solid var(--sl-color-gray-5, #27272a);
+    border-radius: 6px;
+    outline: none;
+  }
+
+  #mobile-ddg-search-input:focus {
+    border-color: var(--sl-color-accent, #e2a05a);
+  }
+
+  #mobile-ddg-search-input::placeholder {
+    color: var(--sl-color-gray-3, #71717a);
   }
 
   .mobile-nav-links {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
   .mobile-nav-link {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 0.6rem;
-    font-size: 0.95rem;
+    padding: 0.6rem 0.75rem;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--sl-color-gray-2, #a1a1aa);
     text-decoration: none;
