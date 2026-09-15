@@ -19,7 +19,18 @@ function formatDate(date: Date) {
 }
 ---
 
-<StarlightPage frontmatter={{ title: siteConfig.title, template: 'splash' }}>
+<StarlightPage
+  frontmatter={{
+    title: siteConfig.title,
+    template: 'splash',
+    head: [
+      {
+        tag: 'title',
+        content: siteConfig.title,
+      },
+    ],
+  }}
+>
   <div class="home-container">
     <!-- Hero Section -->
     <section class="hero-section">
@@ -175,7 +186,7 @@ function formatDate(date: Date) {
   .hero-description {
     font-size: 0.925rem;
     line-height: 1.55;
-    color: var(--sl-color-gray-3, #71717a);
+    color: var(--sl-color-gray-3, #9e9ea7);
     margin: 0;
   }
 
@@ -289,7 +300,7 @@ function formatDate(date: Date) {
   .post-date {
     font-family: var(--font-mono);
     font-size: 0.775rem;
-    color: var(--sl-color-gray-3, #71717a);
+    color: var(--sl-color-gray-3, #9e9ea7);
   }
 
   .post-tags {
@@ -299,7 +310,7 @@ function formatDate(date: Date) {
 
   .tag-pill {
     font-size: 0.725rem;
-    color: var(--sl-color-gray-3, #71717a);
+    color: var(--sl-color-gray-3, #9e9ea7);
     font-family: var(--font-mono);
   }
 

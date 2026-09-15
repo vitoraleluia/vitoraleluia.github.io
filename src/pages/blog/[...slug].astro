@@ -32,7 +32,7 @@ function formatDate(date: Date) {
 
 <StarlightPage
   frontmatter={{
-    title: `${post.data.title} — Vitor Aleluia`,
+    title: post.data.title,
     description: post.data.description,
     template: 'splash',
   }}
@@ -151,7 +151,7 @@ function formatDate(date: Date) {
     gap: 0.5rem;
     font-family: var(--font-mono);
     font-size: 0.825rem;
-    color: var(--sl-color-gray-3, #71717a);
+    color: var(--sl-color-gray-3, #9e9ea7);
     margin-bottom: 0.85rem;
   }
 
@@ -299,7 +299,7 @@ function formatDate(date: Date) {
     align-items: center;
     justify-content: space-between;
     font-size: 0.875rem;
-    color: var(--sl-color-gray-3, #71717a);
+    color: var(--sl-color-gray-3, #9e9ea7);
   }
 
   .footer-back-link,

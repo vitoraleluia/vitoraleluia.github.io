@@ -8,6 +8,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'Vitor Aleluia',
+			titleDelimiter: '-',
 			description: 'Personal blog covering software engineering, systems architecture, and developer tooling.',
 			customCss: [
 				'./src/styles/custom.css',
@@ -24,6 +25,38 @@ export default defineConfig({
 			pagefind: false,
 			pagination: false,
 			credits: false,
+			head: [
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'preload',
+						href: '/fonts/outfit-latin-400-normal.woff2',
+						as: 'font',
+						type: 'font/woff2',
+						crossorigin: 'anonymous',
+					},
+				},
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'preload',
+						href: '/fonts/outfit-latin-500-normal.woff2',
+						as: 'font',
+						type: 'font/woff2',
+						crossorigin: 'anonymous',
+					},
+				},
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'preload',
+						href: '/fonts/outfit-latin-700-normal.woff2',
+						as: 'font',
+						type: 'font/woff2',
+						crossorigin: 'anonymous',
+					},
+				},
+			],
 		}),
 	],
 });
