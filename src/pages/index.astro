@@ -1,7 +1,6 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import Avatar from '../components/Avatar.astro';
-import SocialIcons from '../components/SocialIcons.astro';
 import PostCard from '../components/PostCard.astro';
 import { siteConfig } from '../site.config';
 import { getCollection } from 'astro:content';
@@ -64,7 +63,7 @@ const recentPosts = allPosts
     </section>
 
     <!-- Recent Posts Section -->
-    <section class="py-11 border-b border-ctp-surface0">
+    <section class="pt-11">
       <div class="flex justify-between items-baseline mb-6">
         <div>
           <h2 class="text-xl font-bold text-ctp-text font-sans m-0">Recent Posts</h2>
@@ -77,24 +76,6 @@ const recentPosts = allPosts
       <div class="flex flex-col gap-4">
         {recentPosts.map((post) => (
           <PostCard post={post} headingLevel="h3" />
-        ))}
-      </div>
-    </section>
-
-    <!-- Connect / Contact Section -->
-    <section class="pt-11">
-      <h2 class="text-lg font-bold text-ctp-text font-sans mb-4 m-0">Contact & Links</h2>
-      <div class="flex flex-wrap gap-2.5">
-        {siteConfig.socialLinks.map((item) => (
-          <a
-            href={item.href}
-            target={item.href.startsWith('http') ? '_blank' : undefined}
-            rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-ctp-subtext0 bg-ctp-surface0/40 hover:bg-ctp-surface0 border border-ctp-surface1 hover:border-ctp-peach hover:text-ctp-peach rounded-md transition-colors duration-150 no-underline"
-          >
-            <SocialIcons icon={item.icon} size={15} />
-            <span>{item.label}</span>
-          </a>
         ))}
       </div>
     </section>

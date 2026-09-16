@@ -1,25 +1,24 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
-  const sorted = posts.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  );
-
-  return sorted.map((post, index) => {
-    const prevPost = index < sorted.length - 1 ? sorted[index + 1] : null;
-    const nextPost = index > 0 ? sorted[index - 1] : null;
-    return {
-      params: { slug: post.id },
-      props: { post, prevPost, nextPost },
-    };
-  });
+  const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  return sortedPosts.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      prevPost: sortedPosts[index + 1] || null,
+      nextPost: sortedPosts[index - 1] || null,
+    },
+  }));
 }
 
 const { post, prevPost, nextPost } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const hasHeadings = headings && headings.some((h) => h.depth >= 2 && h.depth <= 4);
 
 function formatDate(date: Date) {
   return date.toLocaleDateString('en-US', {
@@ -37,9 +36,12 @@ function formatDate(date: Date) {
     template: 'splash',
   }}
 >
-  <div class="w-full px-4 pt-8 pb-20">
-    <div class="max-w-2xl mx-auto">
-      <!-- Breadcrumb navigation -->
+  <div class="blog-post-wrapper w-full max-w-5xl xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+    <div class="flex flex-col lg:flex-row justify-center gap-8 xl:gap-14 items-start">
+      <!-- Article Main Column -->
+      <article class="w-full max-w-2xl min-w-0 mx-auto lg:mx-0">
+        <!-- Breadcrumb navigation -->
+
       <nav class="mb-8" aria-label="Breadcrumb">
         <a href="/blog/" class="inline-flex items-center gap-1.5 text-sm font-medium text-ctp-peach hover:underline no-underline">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -64,13 +66,18 @@ function formatDate(date: Date) {
 
         <div class="flex flex-wrap gap-2">
           {post.data.tags.map((tag) => (
-            <span class="font-mono text-xs text-ctp-subtext0 bg-ctp-surface0 border border-ctp-surface1 px-2 py-0.5 rounded">#{tag}</span>
+            <a
+              href={`/tags/${tag}/`}
+              class="font-mono text-xs text-ctp-subtext0 bg-ctp-surface0 border border-ctp-surface1 hover:border-ctp-peach hover:text-ctp-peach px-2 py-0.5 rounded transition-colors duration-150 no-underline"
+            >
+              #{tag}
+            </a>
           ))}
         </div>
       </header>
 
       <!-- Article Content (Libre Baskerville serif font for editorial reading) -->
-      <div class="prose dark:prose-invert prose-headings:font-sans prose-headings:text-ctp-text prose-h2:text-2xl prose-h2:border-b prose-h2:border-ctp-surface0 prose-h2:pb-2 prose-h3:text-xl prose-p:font-serif prose-p:text-lg prose-p:leading-loose prose-p:text-ctp-subtext1 prose-a:text-ctp-peach prose-a:no-underline hover:prose-a:underline prose-code:font-mono prose-code:text-ctp-text prose-code:bg-ctp-surface0/60 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-ctp-mantle prose-pre:border prose-pre:border-ctp-surface0 prose-pre:rounded-lg prose-blockquote:border-l-2 prose-blockquote:border-l-ctp-peach prose-blockquote:text-ctp-subtext0 prose-blockquote:italic prose-li:text-ctp-subtext1 prose-li:font-serif prose-strong:text-ctp-text max-w-none">
+      <div class="prose dark:prose-invert prose-headings:font-sans prose-headings:text-ctp-text prose-headings:scroll-mt-24 prose-h2:text-2xl prose-h2:border-b prose-h2:border-ctp-surface0 prose-h2:pb-2 prose-h3:text-xl prose-p:font-serif prose-p:text-lg prose-p:leading-loose prose-p:text-ctp-subtext1 prose-a:text-ctp-peach prose-a:no-underline hover:prose-a:underline prose-code:font-mono prose-code:text-ctp-text prose-code:bg-ctp-mantle prose-code:border prose-code:border-ctp-surface0 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-ctp-mantle prose-pre:border prose-pre:border-ctp-surface0 prose-pre:rounded-lg prose-pre:text-[1.125rem] prose-pre:leading-relaxed prose-blockquote:border-l-2 prose-blockquote:border-l-ctp-peach prose-blockquote:text-ctp-subtext0 prose-blockquote:italic prose-li:text-ctp-subtext1 prose-li:font-serif prose-strong:text-ctp-text max-w-none">
         <Content />
       </div>
 
@@ -105,6 +112,20 @@ function formatDate(date: Date) {
           </a>
         </div>
       </footer>
+      </article>
+
+      <!-- Sidebar Index (Sticky) - only appears on desktop and wide tablet (lg: and above) -->
+      {hasHeadings && (
+        <aside
+          class="sidebar-sticky-index hidden lg:block w-56 xl:w-64 shrink-0"
+          aria-label="In this page"
+        >
+          <div class="max-h-[calc(100vh-var(--sl-nav-height)-3rem)] overflow-y-auto pr-1">
+            <TableOfContents headings={headings} />
+          </div>
+        </aside>
+      )}
     </div>
   </div>
 </StarlightPage>
+

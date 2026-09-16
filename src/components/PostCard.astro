@@ -38,7 +38,12 @@ const HeadingTag = headingLevel;
   {post.data.tags && post.data.tags.length > 0 && (
     <div class="flex flex-wrap gap-2 mt-3">
       {post.data.tags.map((tag) => (
-        <span class="text-xs font-mono text-ctp-subtext0">#{tag}</span>
+        <a
+          href={`/tags/${tag}/`}
+          class="text-xs font-mono text-ctp-subtext0 hover:text-ctp-peach transition-colors duration-150 no-underline"
+        >
+          #{tag}
+        </a>
       ))}
     </div>
   )}

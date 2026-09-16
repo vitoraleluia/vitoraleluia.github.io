@@ -1,0 +1,66 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+
+const tagCounts = new Map<string, number>();
+for (const post of allPosts) {
+  for (const tag of post.data.tags || []) {
+    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  }
+}
+
+const sortedTags = [...tagCounts.entries()].sort(
+  (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
+);
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'Tags - Blog',
+    description: 'Browse articles and technical writeups by tag',
+    template: 'splash',
+  }}
+>
+  <div class="max-w-3xl mx-auto px-4 pt-10 pb-16">
+    <!-- Breadcrumb navigation -->
+    <nav class="mb-6" aria-label="Breadcrumb">
+      <a href="/blog/" class="inline-flex items-center gap-1.5 text-sm font-medium text-ctp-peach hover:underline no-underline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to all articles
+      </a>
+    </nav>
+
+    <header class="mb-10 pb-6 border-b border-ctp-surface0">
+      <div class="flex items-center justify-between gap-4 mb-2">
+        <h1 class="text-3xl font-bold tracking-tight text-ctp-text font-sans m-0">Tags</h1>
+        <span class="inline-flex items-center font-mono text-xs font-semibold text-ctp-peach px-2.5 py-1 border border-ctp-surface1 bg-ctp-surface0 rounded-md">
+          {sortedTags.length} {sortedTags.length === 1 ? 'tag' : 'tags'}
+        </span>
+      </div>
+      <p class="text-base text-ctp-subtext0 max-w-[48ch] leading-relaxed m-0">
+        Browse articles and technical writeups by topic and subject area.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+      {sortedTags.map(([tag, count]) => (
+        <a
+          href={`/tags/${tag}/`}
+          class="flex items-center justify-between p-4 bg-ctp-surface0/30 hover:bg-ctp-surface0/60 border border-ctp-surface0 hover:border-ctp-peach rounded-lg transition-colors duration-150 no-underline group"
+        >
+          <span class="font-mono text-sm font-semibold text-ctp-text group-hover:text-ctp-peach transition-colors">
+            #{tag}
+          </span>
+          <span class="font-mono text-xs text-ctp-subtext0 bg-ctp-surface0 border border-ctp-surface1 px-2 py-0.5 rounded">
+            {count} {count === 1 ? 'post' : 'posts'}
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</StarlightPage>

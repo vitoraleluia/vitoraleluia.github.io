@@ -174,6 +174,17 @@
   --sl-color-text-accent: #fab387;
   --sl-color-text-invert: #1e1e2e;
 
+  /* Code Block & Inline Code (Catppuccin Mocha) */
+  --sl-text-code: 1.125rem; /* 18px (+4px from default 14px / 0.875rem) */
+  --sl-color-bg-inline-code: var(--ctp-mantle);
+  --ec-codeFontSize: 1.125rem;
+  --ec-codeBg: var(--ctp-mantle);
+  --ec-frm-edBg: var(--ctp-mantle);
+  --ec-frm-trmBg: var(--ctp-mantle);
+  --ec-frm-edActTabBg: var(--ctp-mantle);
+  --ec-brdCol: var(--ctp-surface0);
+  --ec-brdRad: 0.5rem;
+
   --sl-nav-height: 3.75rem;
 }
 
@@ -234,6 +245,17 @@ body {
   --sl-color-text: #4c4f69;
   --sl-color-text-accent: #e0570b;
   --sl-color-text-invert: #eff1f5;
+
+  /* Code Block & Inline Code (Catppuccin Latte) */
+  --sl-text-code: 1.125rem; /* 18px (+4px from default 14px / 0.875rem) */
+  --sl-color-bg-inline-code: var(--ctp-mantle);
+  --ec-codeFontSize: 1.125rem;
+  --ec-codeBg: var(--ctp-mantle);
+  --ec-frm-edBg: var(--ctp-mantle);
+  --ec-frm-trmBg: var(--ctp-mantle);
+  --ec-frm-edActTabBg: var(--ctp-mantle);
+  --ec-brdCol: var(--ctp-surface0);
+  --ec-brdRad: 0.5rem;
 }
 
 /* Starlight Layout Resets for Custom Splash Pages */
@@ -271,6 +293,31 @@ header.header {
 
 .main-frame {
   padding-top: var(--sl-nav-height) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: calc(100vh - var(--sl-nav-height)) !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.main-frame > .lg\:sl-flex,
+.main-pane,
+main,
+.content-panel,
+.content-panel:not(:has(> .sl-container > #_top)),
+.content-panel > .sl-container,
+.sl-container {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-inline: 0 !important;
+}
+
+.sl-markdown-content {
+  flex: 1 0 auto;
+  width: 100% !important;
 }
 
 /* Custom Scrollbars */
@@ -302,3 +349,56 @@ header.header {
 @view-transition {
   navigation: auto;
 }
+
+/* Code Blocks and Code Tags in Blog Posts */
+.prose pre,
+.expressive-code pre {
+  font-size: 1.125rem !important; /* 18px (increased 4px from default 14px / 0.875rem) */
+  line-height: 1.75 !important;
+  background-color: var(--ctp-mantle) !important;
+}
+
+.prose pre > code,
+.expressive-code pre > code,
+.expressive-code .ec-line .code {
+  font-size: 1.125rem !important; /* 18px */
+  background-color: transparent !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+/* Inline code tags use <pre> background color */
+.prose :not(pre) > code {
+  background-color: var(--ctp-mantle) !important;
+  border: 1px solid var(--ctp-surface0);
+}
+
+/* Smooth Scrolling & Heading Anchor Offsets for Blog Post TOC */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.prose :is(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: calc(var(--sl-nav-height, 3.75rem) + 1.5rem);
+}
+
+.toc-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.toc-container::-webkit-scrollbar-thumb {
+  background: var(--color-ctp-surface1);
+  border-radius: 4px;
+}
+
+/* Sticky Sidebar Index for Blog Post */
+.sidebar-sticky-index {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: calc(var(--sl-nav-height, 3.75rem) + 1.5rem) !important;
+  align-self: flex-start !important;
+}
+
+

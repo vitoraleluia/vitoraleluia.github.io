@@ -1,0 +1,160 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+// Filter out h1 (post title) and only include h2, h3, and h4 headings
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
+---
+
+{toc.length > 0 && (
+  <nav class="toc-container font-sans text-sm" aria-label="In this page">
+    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-ctp-surface0 text-xs font-mono font-semibold uppercase tracking-wider text-ctp-overlay2">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ctp-peach">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+      <span>In this page</span>
+    </div>
+
+
+    <ul class="flex flex-col border-l border-ctp-surface0 list-none p-0 m-0 space-y-0.5">
+      {toc.map((heading) => {
+        const isH3 = heading.depth === 3;
+        const isH4 = heading.depth >= 4;
+        return (
+          <li class="m-0 p-0">
+            <a
+              href={`#${heading.slug}`}
+              data-slug={heading.slug}
+              class:list={[
+                'toc-link block py-1.5 no-underline transition-all duration-150 leading-snug border-l-2 -ml-[1px] border-transparent text-ctp-subtext0 hover:text-ctp-peach hover:border-ctp-peach',
+                isH3 ? 'pl-5 text-xs' : isH4 ? 'pl-7 text-xs' : 'pl-3 text-sm font-medium'
+              ]}
+            >
+              {heading.text}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+
+    <!-- Return to top button at the end of the index -->
+    <div class="mt-4 pt-3 border-t border-ctp-surface0">
+      <a
+        href="#_top"
+        id="toc-return-to-top"
+        class="inline-flex items-center gap-2 text-xs font-mono text-ctp-subtext0 hover:text-ctp-peach transition-colors duration-150 no-underline group cursor-pointer p-1.5 rounded hover:bg-ctp-surface0/40 w-full"
+        aria-label="Return to top of page"
+      >
+        <span class="p-1 rounded bg-ctp-surface0/60 group-hover:bg-ctp-peach/20 text-ctp-peach transition-colors">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </span>
+        <span>Return to top</span>
+      </a>
+    </div>
+  </nav>
+)}
+
+<script>
+  function setupToc() {
+    const returnToTop = document.getElementById('toc-return-to-top');
+    if (returnToTop) {
+      returnToTop.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (window.location.hash) {
+          history.pushState(null, '', window.location.pathname + window.location.search);
+        }
+      });
+    }
+
+    const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+    if (!tocLinks.length) return;
+
+    const slugs = tocLinks.map((l) => l.getAttribute('data-slug')).filter(Boolean) as string[];
+    const headings = slugs
+      .map((slug) => document.getElementById(slug))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (!headings.length) return;
+
+    function setActiveLink(activeSlug: string) {
+      tocLinks.forEach((link) => {
+        const slug = link.getAttribute('data-slug');
+        if (slug === activeSlug) {
+          link.classList.add('text-ctp-peach', 'font-semibold', '!border-ctp-peach');
+          link.classList.remove('text-ctp-subtext0');
+        } else {
+          link.classList.remove('text-ctp-peach', 'font-semibold', '!border-ctp-peach');
+          link.classList.add('text-ctp-subtext0');
+        }
+      });
+    }
+
+    let ticking = false;
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateActiveHeading();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    function updateActiveHeading() {
+      const scrollY = window.scrollY;
+      const headerOffset = 100;
+
+      if (scrollY < 120) {
+        setActiveLink('');
+        return;
+      }
+
+      let activeHeading: HTMLElement | null = null;
+      for (let i = 0; i < headings.length; i++) {
+        const h = headings[i];
+        const top = h.getBoundingClientRect().top;
+        if (top <= headerOffset + 10) {
+          activeHeading = h;
+        } else {
+          break;
+        }
+      }
+
+      if (activeHeading) {
+        setActiveLink(activeHeading.id);
+      } else if (headings.length > 0 && headings[0].getBoundingClientRect().top < window.innerHeight / 2) {
+        setActiveLink(headings[0].id);
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateActiveHeading();
+
+    tocLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        const slug = link.getAttribute('data-slug');
+        if (slug) {
+          setActiveLink(slug);
+        }
+      });
+    });
+  }
+
+  setupToc();
+  document.addEventListener('astro:page-load', setupToc);
+</script>

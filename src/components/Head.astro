@@ -1,0 +1,125 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+import type { Props } from '@astrojs/starlight/props';
+import { siteConfig } from '../site.config';
+import { getCollection } from 'astro:content';
+
+const googleVerification =
+  import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ||
+  siteConfig.seo?.googleSiteVerification;
+
+const bingVerification =
+  import.meta.env.PUBLIC_BING_SITE_VERIFICATION ||
+  siteConfig.seo?.bingSiteVerification;
+
+const gaId =
+  import.meta.env.PUBLIC_GA_ID ||
+  siteConfig.analytics?.googleAnalyticsId;
+
+const siteUrl = Astro.site ? Astro.site.href.replace(/\/$/, '') : siteConfig.siteUrl.replace(/\/$/, '');
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = new URL(siteConfig.seo?.defaultOgImage || '/og-image.png', siteUrl).href;
+const rssUrl = new URL('/rss.xml', siteUrl).href;
+
+// Determine page type and JSON-LD structured data
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isBlogPost = pathname.startsWith('/blog/') && pathname !== '/blog';
+
+let structuredData: Record<string, unknown>;
+
+if (isBlogPost) {
+  const slug = pathname.replace(/^\/blog\//, '');
+  const posts = await getCollection('blog');
+  const post = posts.find((p) => p.id === slug);
+
+  if (post) {
+    structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.data.title,
+      description: post.data.description,
+      author: {
+        '@type': 'Person',
+        name: post.data.author || siteConfig.name,
+        url: siteUrl,
+      },
+      publisher: {
+        '@type': 'Person',
+        name: siteConfig.name,
+        url: siteUrl,
+      },
+      datePublished: post.data.pubDate.toISOString(),
+      dateModified: (post.data.updatedDate || post.data.pubDate).toISOString(),
+      image: ogImageUrl,
+      url: canonicalUrl,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': canonicalUrl,
+      },
+      inLanguage: 'en-US',
+    };
+  } else {
+    structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteConfig.title,
+      url: siteUrl,
+      description: siteConfig.description,
+    };
+  }
+} else {
+  structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteConfig.title,
+    url: siteUrl,
+    description: siteConfig.description,
+    author: {
+      '@type': 'Person',
+      name: siteConfig.name,
+      jobTitle: siteConfig.role,
+      url: siteUrl,
+      sameAs: siteConfig.socialLinks
+        .filter((link) => link.href.startsWith('http'))
+        .map((link) => link.href),
+    },
+  };
+}
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+{/* RSS Feed Auto-Discovery */}
+<link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={rssUrl} />
+
+{/* Google Search Console verification */}
+{googleVerification && (
+  <meta name="google-site-verification" content={googleVerification} />
+)}
+
+{/* Bing Webmaster Tools verification */}
+{bingVerification && (
+  <meta name="msvalidate.01" content={bingVerification} />
+)}
+
+{/* OpenGraph & Twitter fallback preview image */}
+<meta property="og:image" content={ogImageUrl} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+{/* Google Analytics 4 (asynchronous gtag.js) */}
+{gaId && (
+  <>
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline define:vars={{ gaId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', gaId);
+    </script>
+  </>
+)}
+
+{/* Schema.org Structured Data (JSON-LD) */}
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

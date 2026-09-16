@@ -1,0 +1,85 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+
+  const tags = [
+    ...new Set(
+      allPosts.flatMap((post) => post.data.tags || []).filter(Boolean)
+    ),
+  ];
+
+  return tags.map((tag) => {
+    const posts = allPosts
+      .filter((post) => post.data.tags?.some((t) => t.toLowerCase() === tag.toLowerCase()))
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+    return {
+      params: { tag },
+      props: { tag, posts },
+    };
+  });
+}
+
+interface Props {
+  tag: string;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { tag, posts } = Astro.props;
+const postCount = posts.length;
+const countText = `${postCount} ${postCount === 1 ? 'post' : 'posts'}`;
+---
+
+<StarlightPage
+  frontmatter={{
+    title: `#${tag} - Blog`,
+    description: `Articles tagged with #${tag} (${countText})`,
+    template: 'splash',
+  }}
+>
+  <div class="max-w-3xl mx-auto px-4 pt-10 pb-16">
+    <!-- Breadcrumb navigation -->
+    <nav class="mb-6" aria-label="Breadcrumb">
+      <a href="/blog/" class="inline-flex items-center gap-1.5 text-sm font-medium text-ctp-peach hover:underline no-underline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to all articles
+      </a>
+    </nav>
+
+    <header class="mb-10 pb-6 border-b border-ctp-surface0">
+      <div class="flex items-center justify-between gap-4 mb-2">
+        <h1 class="text-3xl font-bold tracking-tight text-ctp-text font-sans m-0">#{tag}</h1>
+        <span class="inline-flex items-center font-mono text-xs font-semibold text-ctp-peach px-2.5 py-1 border border-ctp-surface1 bg-ctp-surface0 rounded-md">
+          {countText}
+        </span>
+      </div>
+      <p class="text-base text-ctp-subtext0 max-w-[48ch] leading-relaxed m-0">
+        Showing all {postCount} {postCount === 1 ? 'article' : 'articles'} tagged with <span class="text-ctp-peach font-mono font-medium">#{tag}</span>.
+      </p>
+    </header>
+
+    <!-- Articles List -->
+    <div class="flex flex-col gap-5" id="articles-container">
+      {posts.map((post) => (
+        <PostCard post={post} headingLevel="h2" />
+      ))}
+    </div>
+
+    <!-- Tag page footer navigation -->
+    <footer class="mt-14 pt-8 border-t border-ctp-surface0 flex items-center justify-between text-sm">
+      <a href="/blog/" class="text-ctp-subtext0 hover:text-ctp-peach no-underline transition-colors">
+        &larr; Return to Blog Directory
+      </a>
+      <a href="/tags/" class="text-ctp-subtext0 hover:text-ctp-peach no-underline transition-colors">
+        View All Tags &rarr;
+      </a>
+    </footer>
+  </div>
+</StarlightPage>

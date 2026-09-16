@@ -21,6 +21,16 @@ export const siteConfig = {
   role: 'Software Engineer',
   location: 'Portugal',
   cvUrl: '/cv.pdf',
+  // SEO & Verification
+  seo: {
+    googleSiteVerification: '', // Paste Google Search Console verification code here or via PUBLIC_GOOGLE_SITE_VERIFICATION env
+    bingSiteVerification: '',   // Optional Bing Webmaster verification code
+    defaultOgImage: '/og-image.png',
+  },
+  // Analytics
+  analytics: {
+    googleAnalyticsId: '', // Paste GA4 Measurement ID (e.g., 'G-XXXXXXXXXX') here or via PUBLIC_GA_ID env
+  },
   navLinks: [
     { label: 'Home', href: '/' },
     { label: 'Blog', href: '/blog/' },
