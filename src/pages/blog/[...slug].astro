@@ -36,15 +36,15 @@ function formatDate(date: Date) {
     <div
       class:list={[
         hasHeadings
-          ? 'grid grid-cols-1 xl:grid-cols-[1fr_minmax(0,42rem)_1fr] gap-y-8 xl:gap-x-8 2xl:gap-x-12 items-start justify-center'
-          : 'max-w-2xl mx-auto'
+          ? 'grid grid-cols-1 xl:grid-cols-[1fr_auto_1fr] gap-y-8 xl:gap-x-8 2xl:gap-x-12 items-start justify-center'
+          : 'max-w-3xl mx-auto'
       ]}
     >
       <!-- Symmetrical Left Spacer (ensures article text is mathematically dead-centered like an e-reader) -->
       {hasHeadings && <div class="hidden xl:block" aria-hidden="true" />}
 
       <!-- Article Main Column -->
-      <article class="w-full max-w-2xl min-w-0 mx-auto">
+      <article class="w-full max-w-3xl min-w-0 mx-auto">
         <!-- Breadcrumb navigation -->
 
       <nav class="mb-8" aria-label="Breadcrumb">
@@ -71,7 +71,7 @@ function formatDate(date: Date) {
       </header>
 
       <!-- Article Content (Libre Baskerville serif font for editorial reading) -->
-      <div class="prose dark:prose-invert prose-headings:font-sans prose-headings:text-ctp-text prose-headings:scroll-mt-24 prose-h2:text-2xl prose-h2:border-b prose-h2:border-ctp-surface0 prose-h2:pb-2 prose-h3:text-xl prose-p:font-serif prose-p:text-lg prose-p:leading-loose prose-p:text-ctp-subtext1 prose-a:text-ctp-peach prose-a:no-underline hover:prose-a:underline prose-code:font-mono prose-code:text-ctp-text prose-code:bg-ctp-mantle prose-code:border prose-code:border-ctp-surface0 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-ctp-mantle prose-pre:border prose-pre:border-ctp-surface0 prose-pre:rounded-lg prose-pre:text-[1.125rem] prose-pre:leading-relaxed prose-blockquote:border-l-2 prose-blockquote:border-l-ctp-peach prose-blockquote:text-ctp-subtext0 prose-blockquote:italic prose-li:text-ctp-subtext1 prose-li:font-serif prose-strong:text-ctp-text max-w-none">
+      <div class="prose dark:prose-invert prose-headings:font-sans prose-headings:text-ctp-text prose-headings:scroll-mt-24 prose-h2:text-2xl prose-h2:border-b prose-h2:border-ctp-surface0 prose-h2:pb-2 prose-h3:text-xl prose-p:font-serif prose-p:text-lg prose-p:leading-loose prose-p:text-ctp-text prose-a:text-ctp-peach prose-a:no-underline hover:prose-a:underline prose-code:font-mono prose-code:text-ctp-text prose-code:bg-ctp-mantle prose-code:border prose-code:border-ctp-surface0 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-ctp-mantle prose-pre:border prose-pre:border-ctp-surface0 prose-pre:rounded-lg prose-pre:text-[1.125rem] prose-pre:leading-relaxed prose-blockquote:border-l-2 prose-blockquote:border-l-ctp-peach prose-blockquote:text-ctp-subtext0 prose-blockquote:italic prose-li:text-ctp-text prose-li:font-serif prose-strong:text-ctp-text max-w-none">
         <Content />
       </div>
       </article>
