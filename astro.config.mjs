@@ -30,7 +30,7 @@ export default defineConfig({
 					tag: 'link',
 					attrs: {
 						rel: 'preload',
-						href: '/fonts/outfit-latin-400-normal.woff2',
+						href: '/fonts/open-sans-latin-400-normal.woff2',
 						as: 'font',
 						type: 'font/woff2',
 						crossorigin: 'anonymous',
@@ -40,7 +40,7 @@ export default defineConfig({
 					tag: 'link',
 					attrs: {
 						rel: 'preload',
-						href: '/fonts/outfit-latin-500-normal.woff2',
+						href: '/fonts/open-sans-latin-700-normal.woff2',
 						as: 'font',
 						type: 'font/woff2',
 						crossorigin: 'anonymous',
@@ -50,7 +50,17 @@ export default defineConfig({
 					tag: 'link',
 					attrs: {
 						rel: 'preload',
-						href: '/fonts/outfit-latin-700-normal.woff2',
+						href: '/fonts/libre-baskerville-latin-400-normal.woff2',
+						as: 'font',
+						type: 'font/woff2',
+						crossorigin: 'anonymous',
+					},
+				},
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'preload',
+						href: '/fonts/cascadia-mono-latin-400-normal.woff2',
 						as: 'font',
 						type: 'font/woff2',
 						crossorigin: 'anonymous',

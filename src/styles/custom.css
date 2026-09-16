@@ -1,48 +1,79 @@
-/* Secondary Editorial and Code Fonts (Must precede @font-face per CSS spec) */
-@import '@fontsource/baskervville/400.css';
-@import '@fontsource/baskervville/400-italic.css';
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/500.css';
-@import '@fontsource/jetbrains-mono/600.css';
+/* Local Preloaded Core Fonts */
 
-/* Preloaded Core Fonts (Local & Instant Paint) */
+/* Open Sans - Sans-Serif */
 @font-face {
-  font-family: 'Outfit';
+  font-family: 'Open Sans';
   font-style: normal;
   font-display: swap;
   font-weight: 400;
-  src: url('/fonts/outfit-latin-400-normal.woff2') format('woff2');
+  src: url('/fonts/open-sans-latin-400-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 @font-face {
-  font-family: 'Outfit';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 500;
-  src: url('/fonts/outfit-latin-500-normal.woff2') format('woff2');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-}
-@font-face {
-  font-family: 'Outfit';
+  font-family: 'Open Sans';
   font-style: normal;
   font-display: swap;
   font-weight: 600;
-  src: url('/fonts/outfit-latin-700-normal.woff2') format('woff2');
+  src: url('/fonts/open-sans-latin-600-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 @font-face {
-  font-family: 'Outfit';
+  font-family: 'Open Sans';
   font-style: normal;
   font-display: swap;
   font-weight: 700;
-  src: url('/fonts/outfit-latin-700-normal.woff2') format('woff2');
+  src: url('/fonts/open-sans-latin-700-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* Libre Baskerville - Serif */
+@font-face {
+  font-family: 'Libre Baskerville';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('/fonts/libre-baskerville-latin-400-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Libre Baskerville';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400;
+  src: url('/fonts/libre-baskerville-latin-400-italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Libre Baskerville';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('/fonts/libre-baskerville-latin-700-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* Cascadia Mono - Monospaced */
+@font-face {
+  font-family: 'Cascadia Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('/fonts/cascadia-mono-latin-400-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Cascadia Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('/fonts/cascadia-mono-latin-600-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
 :root {
-  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Baskervville', Georgia, Cambria, 'Times New Roman', serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: 'Libre Baskerville', 'Iowan Old Style', 'Bitstream Charter', Charter, Georgia, Cambria, 'Times New Roman', serif;
+  --font-mono: 'Cascadia Mono', 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
   /* Starlight font overrides */
   --sl-font: var(--font-sans);
@@ -115,7 +146,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings use Outfit */
+/* Headings use Open Sans */
 h1, h2, h3, h4, h5, h6,
 .sl-markdown-content h1,
 .sl-markdown-content h2,
@@ -125,7 +156,7 @@ h1, h2, h3, h4, h5, h6,
   letter-spacing: -0.02em;
 }
 
-/* Code and Monospaced elements use JetBrains Mono */
+/* Code and Monospaced elements use Cascadia Mono */
 code, pre, kbd, samp,
 .expressive-code,
 .expressive-code pre,
