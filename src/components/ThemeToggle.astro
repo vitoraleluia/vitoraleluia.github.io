@@ -5,14 +5,14 @@
 <button
   type="button"
   id="theme-toggle-btn"
-  class="theme-toggle"
+  class="inline-flex items-center justify-center w-9 h-9 p-0 bg-transparent border border-ctp-surface1 rounded-md text-ctp-subtext0 hover:text-ctp-text hover:border-ctp-surface2 hover:bg-ctp-surface0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ctp-peach transition-colors duration-150 cursor-pointer"
   data-theme-toggle
   aria-label="Toggle dark/light mode"
   title="Toggle dark/light mode"
 >
   <!-- Sun icon: shown in dark mode (click to switch to light) -->
   <svg
-    class="theme-icon icon-sun"
+    class="pointer-events-none transition-transform duration-200 block [[data-theme=light]_&]:hidden"
     width="18"
     height="18"
     viewBox="0 0 24 24"
@@ -36,7 +36,7 @@
 
   <!-- Moon icon: shown in light mode (click to switch to dark) -->
   <svg
-    class="theme-icon icon-moon"
+    class="pointer-events-none transition-transform duration-200 hidden [[data-theme=light]_&]:block"
     width="18"
     height="18"
     viewBox="0 0 24 24"
@@ -84,56 +84,3 @@
   // Initial update
   updateLabels();
 </script>
-
-<style>
-  .theme-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    padding: 0;
-    background: transparent;
-    border: 1px solid var(--sl-color-gray-5, #27272a);
-    border-radius: 6px;
-    color: var(--sl-color-gray-2, #a1a1aa);
-    cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
-  }
-
-  .theme-toggle:hover {
-    color: var(--sl-color-white, #ededed);
-    border-color: var(--sl-color-gray-4, #3f3f46);
-    background-color: var(--sl-color-gray-6, #18181b);
-  }
-
-  .theme-toggle:focus-visible {
-    outline: 2px solid var(--sl-color-accent, #e2a05a);
-    outline-offset: 2px;
-  }
-
-  .theme-icon {
-    pointer-events: none;
-    transition: transform 0.2s ease;
-  }
-
-  /* When dark mode is active (default): show Sun, hide Moon */
-  :global(:root:not([data-theme='light'])) .icon-sun,
-  :global(:root[data-theme='dark']) .icon-sun {
-    display: block;
-  }
-
-  :global(:root:not([data-theme='light'])) .icon-moon,
-  :global(:root[data-theme='dark']) .icon-moon {
-    display: none;
-  }
-
-  /* When light mode is active: show Moon, hide Sun */
-  :global(:root[data-theme='light']) .icon-sun {
-    display: none;
-  }
-
-  :global(:root[data-theme='light']) .icon-moon {
-    display: block;
-  }
-</style>

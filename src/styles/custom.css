@@ -70,112 +70,182 @@
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
-:root {
+@layer base, starlight, theme, components, utilities;
+
+@import '@astrojs/starlight-tailwind';
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@plugin '@tailwindcss/typography';
+
+@theme {
   --font-sans: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-serif: 'Libre Baskerville', 'Iowan Old Style', 'Bitstream Charter', Charter, Georgia, Cambria, 'Times New Roman', serif;
-  --font-mono: 'Cascadia Mono', 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-mono: 'Cascadia Mono', 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Starlight font overrides */
+  /* Typography Scale (+2px across all utility tokens for optimal readability) */
+  --text-xs: 0.875rem; /* 14px (was 12px / 0.75rem) */
+  --text-sm: 1rem; /* 16px (was 14px / 0.875rem) */
+  --text-base: 1.125rem; /* 18px (was 16px / 1rem) */
+  --text-lg: 1.25rem; /* 20px (was 18px / 1.125rem) */
+  --text-xl: 1.375rem; /* 22px (was 20px / 1.25rem) */
+  --text-2xl: 1.625rem; /* 26px (was 24px / 1.5rem) */
+  --text-3xl: 2rem; /* 32px (was 30px / 1.875rem) */
+  --text-4xl: 2.375rem; /* 38px (was 36px / 2.25rem) */
+
+  /* Catppuccin Theme Palette Tokens */
+  --color-ctp-rosewater: var(--ctp-rosewater);
+  --color-ctp-flamingo: var(--ctp-flamingo);
+  --color-ctp-pink: var(--ctp-pink);
+  --color-ctp-mauve: var(--ctp-mauve);
+  --color-ctp-red: var(--ctp-red);
+  --color-ctp-maroon: var(--ctp-maroon);
+  --color-ctp-peach: var(--ctp-peach);
+  --color-ctp-yellow: var(--ctp-yellow);
+  --color-ctp-green: var(--ctp-green);
+  --color-ctp-teal: var(--ctp-teal);
+  --color-ctp-sky: var(--ctp-sky);
+  --color-ctp-sapphire: var(--ctp-sapphire);
+  --color-ctp-blue: var(--ctp-blue);
+  --color-ctp-lavender: var(--ctp-lavender);
+  --color-ctp-text: var(--ctp-text);
+  --color-ctp-subtext1: var(--ctp-subtext1);
+  --color-ctp-subtext0: var(--ctp-subtext0);
+  --color-ctp-overlay2: var(--ctp-overlay2);
+  --color-ctp-overlay1: var(--ctp-overlay1);
+  --color-ctp-overlay0: var(--ctp-overlay0);
+  --color-ctp-surface2: var(--ctp-surface2);
+  --color-ctp-surface1: var(--ctp-surface1);
+  --color-ctp-surface0: var(--ctp-surface0);
+  --color-ctp-base: var(--ctp-base);
+  --color-ctp-mantle: var(--ctp-mantle);
+  --color-ctp-crust: var(--ctp-crust);
+}
+
+:root,
+:root[data-theme='dark'] {
   --sl-font: var(--font-sans);
   --sl-font-mono: var(--font-mono);
 
-  /* Blog Theme Accent - Warm Amber / Copper inspired by Akita on Rails */
-  --blog-accent: #e2a05a;
-  --blog-accent-hover: #f2bd82;
-  --blog-accent-subtle: rgba(226, 160, 90, 0.14);
-  --blog-border: rgba(255, 255, 255, 0.08);
-  --blog-card-bg: rgba(255, 255, 255, 0.025);
-  --blog-card-hover: rgba(255, 255, 255, 0.05);
+  /* Catppuccin Mocha Theme Palette (Dark) */
+  --ctp-rosewater: #f5e0dc;
+  --ctp-flamingo: #f2cdcd;
+  --ctp-pink: #f5c2e7;
+  --ctp-mauve: #cba6f7;
+  --ctp-red: #f38ba8;
+  --ctp-maroon: #eba0ac;
+  --ctp-peach: #fab387;
+  --ctp-yellow: #f9e2af;
+  --ctp-green: #a6e3a1;
+  --ctp-teal: #94e2d5;
+  --ctp-sky: #89dceb;
+  --ctp-sapphire: #74c7ec;
+  --ctp-blue: #89b4fa;
+  --ctp-lavender: #b4befe;
+  --ctp-text: #cdd6f4;
+  --ctp-subtext1: #bac2de;
+  --ctp-subtext0: #a6adc8;
+  --ctp-overlay2: #9399b2;
+  --ctp-overlay1: #7f849c;
+  --ctp-overlay0: #6c7086;
+  --ctp-surface2: #585b70;
+  --ctp-surface1: #45475a;
+  --ctp-surface0: #313244;
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
 
-  /* Starlight Theme Customization - Dark Mode by default */
-  --sl-color-accent-low: rgba(226, 160, 90, 0.16);
-  --sl-color-accent: #e2a05a;
-  --sl-color-accent-high: #f2bd82;
-  --sl-color-white: #ededed;
-  --sl-color-gray-1: #d4d4d8;
-  --sl-color-gray-2: #a1a1aa;
-  --sl-color-gray-3: #9e9ea7;
-  --sl-color-gray-4: #3f3f46;
-  --sl-color-gray-5: #27272a;
-  --sl-color-gray-6: #18181b;
-  --sl-color-black: #121214;
-  --sl-color-bg: #121214;
-  --sl-color-bg-nav: #121214;
+  /* Starlight Catppuccin Mocha Theme Mapping (Peach Accent) */
+  --sl-color-accent: #fab387;
+  --sl-color-accent-high: #fcd7ba;
+  --sl-color-accent-low: rgba(250, 179, 135, 0.16);
+  --sl-color-bg: #1e1e2e;
+  --sl-color-bg-nav: #181825;
+  --sl-color-black: #11111b;
+  --sl-color-white: #cdd6f4;
+  --sl-color-gray-1: #bac2de;
+  --sl-color-gray-2: #a6adc8;
+  --sl-color-gray-3: #9399b2;
+  --sl-color-gray-4: #6c7086;
+  --sl-color-gray-5: #45475a;
+  --sl-color-gray-6: #313244;
+  --sl-color-gray-7: #181825;
 
-  /* Button Primary High-Contrast Variables */
-  --btn-primary-bg: #e2a05a;
-  --btn-primary-hover: #f2bd82;
-  --btn-primary-text: #121214;
+  --sl-color-text: #cdd6f4;
+  --sl-color-text-accent: #fab387;
+  --sl-color-text-invert: #1e1e2e;
+
+  --sl-nav-height: 3.75rem;
 }
 
-/* Light mode adjustments if user chooses light mode */
-:root[data-theme='light'] {
-  --blog-accent: #b45309;
-  --blog-accent-hover: #92400e;
-  --blog-accent-subtle: rgba(180, 83, 9, 0.1);
-  --blog-border: rgba(0, 0, 0, 0.09);
-  --blog-card-bg: rgba(0, 0, 0, 0.02);
-  --blog-card-hover: rgba(0, 0, 0, 0.04);
-
-  --sl-color-accent-low: rgba(180, 83, 9, 0.15);
-  --sl-color-accent: #b45309;
-  --sl-color-accent-high: #78350f;
-  --sl-color-white: #18181b;
-  --sl-color-gray-1: #27272a;
-  --sl-color-gray-2: #3f3f46;
-  --sl-color-gray-3: #52525b;
-  --sl-color-gray-4: #a1a1aa;
-  --sl-color-gray-5: #e4e4e7;
-  --sl-color-gray-6: #f4f4f5;
-  --sl-color-black: #fafafa;
-  --sl-color-bg: #fafafa;
-  --sl-color-bg-nav: #ffffff;
-
-  /* Button Primary in Light Mode: crisp white text on warm dark-amber */
-  --btn-primary-bg: #b45309;
-  --btn-primary-hover: #92400e;
-  --btn-primary-text: #ffffff;
-}
-
-/* Global Typography */
 body {
   font-family: var(--font-sans);
+  font-size: var(--text-base);
   background-color: var(--sl-color-bg);
-  color: var(--sl-color-gray-1);
+  color: var(--sl-color-white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings use Open Sans */
-h1, h2, h3, h4, h5, h6,
-.sl-markdown-content h1,
-.sl-markdown-content h2,
-.sl-markdown-content h3 {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+:root[data-theme='light'] {
+  /* Catppuccin Latte Theme Palette (Light) */
+  --ctp-rosewater: #dc8a78;
+  --ctp-flamingo: #dd7878;
+  --ctp-pink: #ea76cb;
+  --ctp-mauve: #8839ef;
+  --ctp-red: #d20f39;
+  --ctp-maroon: #e64553;
+  --ctp-peach: #e0570b;
+  --ctp-yellow: #df8e1d;
+  --ctp-green: #40a02b;
+  --ctp-teal: #179299;
+  --ctp-sky: #04a5e5;
+  --ctp-sapphire: #209fb5;
+  --ctp-blue: #1e66f5;
+  --ctp-lavender: #7287fd;
+  --ctp-text: #4c4f69;
+  --ctp-subtext1: #5c5f77;
+  --ctp-subtext0: #6c6f85;
+  --ctp-overlay2: #7c7f93;
+  --ctp-overlay1: #8c8fa1;
+  --ctp-overlay0: #9ca0b0;
+  --ctp-surface2: #acb0be;
+  --ctp-surface1: #bcc0cc;
+  --ctp-surface0: #ccd0da;
+  --ctp-base: #eff1f5;
+  --ctp-mantle: #e6e9ef;
+  --ctp-crust: #dce0e8;
+
+  /* Starlight Catppuccin Latte Theme Mapping (Peach Accent) */
+  --sl-color-accent: #e0570b;
+  --sl-color-accent-high: #c2410c;
+  --sl-color-accent-low: rgba(224, 87, 11, 0.16);
+  --sl-color-bg: #eff1f5;
+  --sl-color-bg-nav: #e6e9ef;
+  --sl-color-black: #dce0e8;
+  --sl-color-white: #4c4f69;
+  --sl-color-gray-1: #5c5f77;
+  --sl-color-gray-2: #6c6f85;
+  --sl-color-gray-3: #7c7f93;
+  --sl-color-gray-4: #9ca0b0;
+  --sl-color-gray-5: #bcc0cc;
+  --sl-color-gray-6: #ccd0da;
+  --sl-color-gray-7: #e6e9ef;
+
+  --sl-color-text: #4c4f69;
+  --sl-color-text-accent: #e0570b;
+  --sl-color-text-invert: #eff1f5;
 }
 
-/* Code and Monospaced elements use Cascadia Mono */
-code, pre, kbd, samp,
-.expressive-code,
-.expressive-code pre,
-.expressive-code code {
-  font-family: var(--font-mono) !important;
-}
-
-/* Hide Starlight's default documentation page title header on custom splash pages */
+/* Starlight Layout Resets for Custom Splash Pages */
 .content-panel:has(> .sl-container > #_top) {
   display: none !important;
 }
 
-/* Hide empty doc footer */
 main footer.sl-flex:empty,
 main footer.sl-flex:has(> .meta:empty):has(> .pagination-links:empty) {
   display: none !important;
 }
 
-/* Remove side padding on main pane so custom layout reaches intended widths */
 .main-pane {
   padding-inline: 0 !important;
 }
@@ -184,41 +254,11 @@ main footer.sl-flex:has(> .meta:empty):has(> .pagination-links:empty) {
   padding: 0 !important;
 }
 
-/* Custom Scrollbars */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--sl-color-gray-5);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--sl-color-gray-4);
-}
-
-/* Text Selection */
-::selection {
-  background: var(--sl-color-accent-low);
-  color: var(--sl-color-accent-high);
-}
-
-/* Navbar & Mobile Layout Clearance */
-:root {
-  --sl-nav-height: 3.75rem;
-}
-
 header.header {
   height: var(--sl-nav-height) !important;
   padding: 0 1.25rem !important;
-  background-color: var(--sl-color-bg, #121214) !important;
-  border-bottom: 1px solid var(--sl-color-gray-5, #27272a) !important;
+  background-color: var(--sl-color-bg-nav) !important;
+  border-bottom: 1px solid var(--sl-color-gray-6) !important;
   display: flex !important;
   align-items: center !important;
   position: fixed !important;
@@ -233,8 +273,32 @@ header.header {
   padding-top: var(--sl-nav-height) !important;
 }
 
-/* Smooth Cross-Document Transitions (eliminates flicker on page changes) */
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-ctp-surface1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ctp-surface2);
+}
+
+/* Text Selection */
+::selection {
+  background: var(--sl-color-accent-low);
+  color: var(--color-ctp-text);
+}
+
+/* Smooth Transitions */
 @view-transition {
   navigation: auto;
 }
-

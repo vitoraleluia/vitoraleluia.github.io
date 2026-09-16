@@ -9,26 +9,30 @@ const isCurrent = (href: string) => {
 };
 ---
 
-<div class="header-container">
-  <!-- Brand / Name (No tilde) -->
-  <div class="header-left">
-    <a href="/" class="brand-link">
-      <span class="brand-name">{siteConfig.name}</span>
+<div class="w-full max-w-7xl h-full mx-auto flex items-center justify-between gap-6 relative">
+  <!-- Brand / Name -->
+  <div class="flex items-center gap-8">
+    <a href="/" class="inline-flex items-center font-sans text-lg font-bold text-ctp-text hover:text-ctp-peach tracking-tight transition-colors duration-150 no-underline">
+      <span>{siteConfig.name}</span>
     </a>
 
     <!-- Desktop Nav Links -->
-    <nav class="desktop-nav" aria-label="Main Navigation">
+    <nav class="hidden min-[680px]:flex items-center gap-3" aria-label="Main Navigation">
       {siteConfig.navLinks.map((link) => (
         <a
           href={link.href}
           target={link.target}
           rel={link.rel}
-          class={`nav-link ${isCurrent(link.href) ? 'active' : ''} ${link.label === 'CV' ? 'cv-link' : ''}`}
+          class:list={[
+            'inline-flex items-center gap-1 text-sm font-medium px-2.5 py-1.5 rounded-md transition-colors duration-150 no-underline',
+            isCurrent(link.href) ? 'text-ctp-peach font-semibold' : 'text-ctp-subtext0 hover:text-ctp-text',
+            link.label === 'CV' ? 'border border-ctp-surface1 hover:border-ctp-peach hover:text-ctp-peach px-2 py-1 text-xs' : '',
+          ]}
           aria-current={isCurrent(link.href) ? 'page' : undefined}
         >
           {link.label}
           {link.target === '_blank' && (
-            <svg class="external-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="opacity-60" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
               <polyline points="15 3 21 3 21 9"></polyline>
               <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -40,18 +44,18 @@ const isCurrent = (href: string) => {
   </div>
 
   <!-- Right Controls: Desktop Search + Theme Toggle + Mobile Toggle -->
-  <div class="header-right">
+  <div class="flex items-center gap-3">
     <!-- Desktop DuckDuckGo Search (Hidden on mobile) -->
     <form
       id="ddg-search-form"
-      class="ddg-search desktop-search"
+      class="relative hidden min-[680px]:flex items-center"
       role="search"
       action="https://duckduckgo.com/"
       method="get"
       target="_blank"
       rel="noopener noreferrer"
     >
-      <svg class="ddg-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="absolute left-2.5 text-ctp-overlay0 pointer-events-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
@@ -62,29 +66,30 @@ const isCurrent = (href: string) => {
         autocomplete="off"
         spellcheck="false"
         aria-label="Search this blog using DuckDuckGo"
+        class="w-44 focus:w-56 h-8 pl-8 pr-11 text-xs font-sans text-ctp-text placeholder-ctp-overlay0 bg-ctp-surface0 border border-ctp-surface1 rounded-md outline-none focus:border-ctp-peach transition-all duration-200"
       />
       <input type="hidden" name="q" id="ddg-final-query" value="" />
-      <kbd class="ddg-kbd" aria-hidden="true">Ctrl K</kbd>
+      <kbd class="absolute right-2 font-mono text-[12px] px-1.5 py-0.5 border border-ctp-surface1 rounded text-ctp-overlay0 bg-ctp-mantle pointer-events-none" aria-hidden="true">Ctrl K</kbd>
     </form>
 
-    <div class="theme-wrapper">
+    <div class="flex items-center">
       <ThemeToggle />
     </div>
 
     <!-- Mobile Hamburger Button -->
     <button
       id="mobile-nav-toggle"
-      class="mobile-toggle"
+      class="flex min-[680px]:hidden items-center justify-center w-9 h-9 p-0 bg-transparent border border-ctp-surface1 rounded-md text-ctp-subtext0 hover:text-ctp-text hover:border-ctp-surface2 transition-colors cursor-pointer group"
       aria-label="Toggle navigation menu"
       aria-expanded="false"
       type="button"
     >
-      <svg class="hamburger-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg class="hamburger-icon pointer-events-none block group-[.is-active]:hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
       </svg>
-      <svg class="close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg class="close-icon pointer-events-none hidden group-[.is-active]:block" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
@@ -92,18 +97,18 @@ const isCurrent = (href: string) => {
   </div>
 
   <!-- Mobile Dropdown Menu (Contains Search on mobile) -->
-  <nav id="mobile-nav-menu" class="mobile-nav" aria-label="Mobile Navigation" hidden>
+  <nav id="mobile-nav-menu" class="hidden [&.is-open:not([hidden])]:flex min-[680px]:!hidden fixed top-[3.75rem] left-0 right-0 w-full max-h-[calc(100vh-3.75rem)] overflow-y-auto bg-ctp-mantle border-b border-ctp-surface0 p-5 flex-col gap-5 shadow-2xl z-50" aria-label="Mobile Navigation" hidden>
     <!-- Mobile DuckDuckGo Search Form -->
     <form
       id="mobile-ddg-search-form"
-      class="mobile-ddg-search"
+      class="relative flex items-center w-full"
       role="search"
       action="https://duckduckgo.com/"
       method="get"
       target="_blank"
       rel="noopener noreferrer"
     >
-      <svg class="ddg-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="absolute left-3 text-ctp-overlay0 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
@@ -114,17 +119,21 @@ const isCurrent = (href: string) => {
         autocomplete="off"
         spellcheck="false"
         aria-label="Search this blog using DuckDuckGo"
+        class="w-full h-9 pl-9 pr-4 text-sm font-sans text-ctp-text placeholder-ctp-overlay0 bg-ctp-surface0 border border-ctp-surface1 rounded-md outline-none focus:border-ctp-peach"
       />
       <input type="hidden" name="q" id="mobile-ddg-final-query" value="" />
     </form>
 
-    <div class="mobile-nav-links">
+    <div class="flex flex-col gap-1.5">
       {siteConfig.navLinks.map((link) => (
         <a
           href={link.href}
           target={link.target}
           rel={link.rel}
-          class={`mobile-nav-link ${isCurrent(link.href) ? 'active' : ''}`}
+          class:list={[
+            'mobile-nav-link flex items-center justify-between px-3 py-2.5 text-base font-medium rounded-md transition-colors no-underline',
+            isCurrent(link.href) ? 'text-ctp-peach bg-ctp-surface0/70 font-semibold' : 'text-ctp-subtext0 hover:text-ctp-peach hover:bg-ctp-surface0/50',
+          ]}
           aria-current={isCurrent(link.href) ? 'page' : undefined}
         >
           <span>{link.label}</span>
@@ -257,285 +266,3 @@ const isCurrent = (href: string) => {
     });
   }
 </script>
-
-<style>
-  .header-container {
-    width: 100%;
-    max-width: 78rem;
-    height: 100%;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    position: relative;
-  }
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  .brand-link {
-    display: inline-flex;
-    align-items: center;
-    font-family: var(--font-sans);
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--sl-color-white, #ededed);
-    text-decoration: none;
-    letter-spacing: -0.01em;
-    transition: color 0.15s ease;
-  }
-
-  .brand-link:hover {
-    color: var(--sl-color-accent, #e2a05a);
-  }
-
-  .desktop-nav {
-    display: none;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  @media (min-width: 680px) {
-    .desktop-nav {
-      display: flex;
-    }
-  }
-
-  .nav-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--sl-color-gray-2, #a1a1aa);
-    text-decoration: none;
-    padding: 0.35rem 0.6rem;
-    border-radius: 6px;
-    transition: color 0.15s ease, background-color 0.15s ease;
-  }
-
-  .nav-link:hover {
-    color: var(--sl-color-white, #ededed);
-  }
-
-  .nav-link.active {
-    color: var(--sl-color-accent, #e2a05a);
-    font-weight: 600;
-  }
-
-  .cv-link {
-    border: 1px solid var(--sl-color-gray-5, #27272a);
-    padding: 0.2rem 0.55rem;
-  }
-
-  .cv-link:hover {
-    border-color: var(--sl-color-accent, #e2a05a);
-    color: var(--sl-color-accent, #e2a05a);
-  }
-
-  .external-icon {
-    opacity: 0.6;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  /* Desktop DuckDuckGo Search */
-  .desktop-search {
-    position: relative;
-    display: none;
-    align-items: center;
-  }
-
-  @media (min-width: 680px) {
-    .desktop-search {
-      display: flex;
-    }
-  }
-
-  .ddg-search-icon {
-    position: absolute;
-    left: 0.65rem;
-    color: var(--sl-color-gray-3, #9e9ea7);
-    pointer-events: none;
-  }
-
-  #ddg-search-input {
-    width: 11rem;
-    height: 2rem;
-    padding: 0.25rem 2.75rem 0.25rem 2rem;
-    font-size: 0.825rem;
-    font-family: var(--font-sans);
-    color: var(--sl-color-white, #ededed);
-    background-color: var(--sl-color-gray-6, #18181b);
-    border: 1px solid var(--sl-color-gray-5, #27272a);
-    border-radius: 6px;
-    outline: none;
-    transition: border-color 0.15s ease, width 0.2s ease;
-  }
-
-  #ddg-search-input:focus {
-    width: 14rem;
-    border-color: var(--sl-color-accent, #e2a05a);
-  }
-
-  #ddg-search-input::placeholder {
-    color: var(--sl-color-gray-3, #9e9ea7);
-  }
-
-  .ddg-kbd {
-    position: absolute;
-    right: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    padding: 0.1rem 0.35rem;
-    border: 1px solid var(--sl-color-gray-5, #27272a);
-    border-radius: 4px;
-    color: var(--sl-color-gray-3, #9e9ea7);
-    background-color: var(--sl-color-gray-6, #18181b);
-    pointer-events: none;
-  }
-
-  .theme-wrapper {
-    display: flex;
-    align-items: center;
-  }
-
-  /* Mobile menu button */
-  .mobile-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    padding: 0;
-    background: transparent;
-    border: 1px solid var(--sl-color-gray-5, #27272a);
-    border-radius: 6px;
-    color: var(--sl-color-gray-2, #a1a1aa);
-    cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .mobile-toggle svg {
-    pointer-events: none;
-  }
-
-  @media (min-width: 680px) {
-    .mobile-toggle {
-      display: none !important;
-    }
-  }
-
-  .mobile-toggle:hover {
-    color: var(--sl-color-white, #ededed);
-    border-color: var(--sl-color-gray-4, #3f3f46);
-  }
-
-  .mobile-toggle .close-icon {
-    display: none;
-  }
-
-  .mobile-toggle.is-active .hamburger-icon {
-    display: none;
-  }
-
-  .mobile-toggle.is-active .close-icon {
-    display: block;
-  }
-
-  /* Mobile Dropdown Menu */
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    top: var(--sl-nav-height, 3.75rem);
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-height: calc(100vh - var(--sl-nav-height, 3.75rem));
-    overflow-y: auto;
-    background-color: var(--sl-color-bg, #121214);
-    border-bottom: 1px solid var(--sl-color-gray-5, #27272a);
-    padding: 1.25rem 1.25rem 1.5rem;
-    flex-direction: column;
-    gap: 1.25rem;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-    z-index: 99;
-  }
-
-  @media (max-width: 679px) {
-    .mobile-nav.is-open:not([hidden]) {
-      display: flex;
-    }
-  }
-
-  .mobile-nav[hidden] {
-    display: none !important;
-  }
-
-  @media (min-width: 680px) {
-    .mobile-nav,
-    .mobile-nav.is-open,
-    .mobile-nav[hidden] {
-      display: none !important;
-    }
-  }
-
-  .mobile-ddg-search {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-
-  #mobile-ddg-search-input {
-    width: 100%;
-    height: 2.35rem;
-    padding: 0.35rem 1rem 0.35rem 2.25rem;
-    font-size: 0.9rem;
-    font-family: var(--font-sans);
-    color: var(--sl-color-white, #ededed);
-    background-color: var(--sl-color-gray-6, #18181b);
-    border: 1px solid var(--sl-color-gray-5, #27272a);
-    border-radius: 6px;
-    outline: none;
-  }
-
-  #mobile-ddg-search-input:focus {
-    border-color: var(--sl-color-accent, #e2a05a);
-  }
-
-  #mobile-ddg-search-input::placeholder {
-    color: var(--sl-color-gray-3, #9e9ea7);
-  }
-
-  .mobile-nav-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .mobile-nav-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.6rem 0.75rem;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--sl-color-gray-2, #a1a1aa);
-    text-decoration: none;
-    border-radius: 6px;
-  }
-
-  .mobile-nav-link:hover,
-  .mobile-nav-link.active {
-    color: var(--sl-color-accent, #e2a05a);
-  }
-</style>

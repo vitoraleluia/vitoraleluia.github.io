@@ -17,11 +17,11 @@ function formatDate(date: Date) {
 ---
 
 <StarlightPage frontmatter={{ title: 'Blog', template: 'splash' }}>
-  <div class="blog-container">
-    <header class="blog-header">
-      <div class="blog-title-row">
-        <h1 class="blog-title">Blog</h1>
-        <a href="/rss.xml" class="rss-link" aria-label="RSS Feed">
+  <div class="max-w-3xl mx-auto px-4 pt-10 pb-16">
+    <header class="mb-10 pb-6 border-b border-ctp-surface0">
+      <div class="flex items-center justify-between gap-4 mb-2">
+        <h1 class="text-3xl font-bold tracking-tight text-ctp-text font-sans m-0">Blog</h1>
+        <a href="/rss.xml" class="inline-flex items-center gap-1.5 font-mono text-xs text-ctp-peach hover:text-ctp-text px-2.5 py-1 border border-ctp-surface1 hover:border-ctp-peach bg-ctp-surface0 rounded-md transition-colors duration-150 no-underline" aria-label="RSS Feed">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 11a9 9 0 0 1 9 9"></path>
             <path d="M4 4a16 16 0 0 1 16 16"></path>
@@ -30,144 +30,30 @@ function formatDate(date: Date) {
           <span>RSS Feed</span>
         </a>
       </div>
-      <p class="blog-subtitle">
+      <p class="text-base text-ctp-subtext0 max-w-[48ch] leading-relaxed m-0">
         Articles, notes, and technical writeups on distributed systems and software architecture.
       </p>
     </header>
 
     <!-- Articles List -->
-    <div class="articles-grid" id="articles-container">
+    <div class="flex flex-col gap-5" id="articles-container">
       {sortedPosts.map((post) => (
-        <article class="article-card">
-          <div class="article-top-meta">
-            <time datetime={post.data.pubDate.toISOString()} class="article-date">
+        <article class="flex flex-col p-5 bg-ctp-surface0/30 hover:bg-ctp-surface0/60 border border-ctp-surface0 hover:border-ctp-peach rounded-lg transition-colors duration-150">
+          <div class="flex items-center justify-between mb-2">
+            <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-ctp-overlay2">
               {formatDate(post.data.pubDate)}
             </time>
           </div>
           
-          <h2 class="article-title">
-            <a href={`/blog/${post.id}/`} class="article-link">
+          <h2 class="text-xl font-semibold leading-snug mb-2 font-sans m-0">
+            <a href={`/blog/${post.id}/`} class="text-ctp-text hover:text-ctp-peach no-underline transition-colors duration-150">
               {post.data.title}
             </a>
           </h2>
 
-          <p class="article-description">{post.data.description}</p>
+          <p class="text-sm text-ctp-subtext0 leading-relaxed m-0">{post.data.description}</p>
         </article>
       ))}
     </div>
   </div>
 </StarlightPage>
-
-<style>
-  .blog-container {
-    max-width: 50rem;
-    margin: 0 auto;
-    padding: 2.5rem 1rem 4rem;
-  }
-
-  .blog-header {
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--sl-color-gray-5, #27272a);
-  }
-
-  .blog-title-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .blog-title {
-    font-size: 2.25rem;
-    line-height: 1.15;
-    margin: 0;
-    color: var(--sl-color-white, #ededed);
-  }
-
-  .blog-subtitle {
-    font-size: 1.05rem;
-    line-height: 1.55;
-    color: var(--sl-color-gray-2, #a1a1aa);
-    margin: 0;
-    max-width: 48ch;
-  }
-
-  .rss-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--sl-color-accent, #e2a05a);
-    text-decoration: none;
-    padding: 0.25rem 0.65rem;
-    border: 1px solid var(--sl-color-gray-5, #27272a);
-    border-radius: 6px;
-    background-color: var(--sl-color-gray-6, #18181b);
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .rss-link:hover {
-    color: var(--sl-color-white, #ededed);
-    border-color: var(--sl-color-accent, #e2a05a);
-  }
-
-  /* Articles List */
-  .articles-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .article-card {
-    display: flex;
-    flex-direction: column;
-    padding: 1.35rem;
-    background-color: var(--sl-color-gray-6, rgba(255, 255, 255, 0.02));
-    border: 1px solid var(--sl-color-gray-5, #27272a);
-    border-radius: 8px;
-    transition: border-color 0.15s ease;
-  }
-
-  .article-card:hover {
-    border-color: var(--sl-color-accent, #e2a05a);
-  }
-
-  .article-top-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-
-  .article-date {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--sl-color-gray-3, #9e9ea7);
-  }
-
-  .article-title {
-    font-size: 1.25rem;
-    line-height: 1.3;
-    margin: 0 0 0.5rem;
-  }
-
-  .article-link {
-    color: var(--sl-color-white, #ededed);
-    text-decoration: none;
-    transition: color 0.15s ease;
-  }
-
-  .article-link:hover {
-    color: var(--sl-color-accent, #e2a05a);
-  }
-
-  .article-description {
-    font-size: 0.95rem;
-    line-height: 1.55;
-    color: var(--sl-color-gray-2, #a1a1aa);
-    margin: 0;
-  }
-</style>

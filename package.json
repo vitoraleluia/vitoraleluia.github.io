@@ -21,7 +21,11 @@
     "esbuild": true
   },
   "devDependencies": {
+    "@astrojs/starlight-tailwind": "^5.0.0",
+    "@tailwindcss/typography": "^0.5.20",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/markdown-it": "^14.2.0",
-    "@types/sanitize-html": "^2.16.1"
+    "@types/sanitize-html": "^2.16.1",
+    "tailwindcss": "^4.3.3"
   }
 }
