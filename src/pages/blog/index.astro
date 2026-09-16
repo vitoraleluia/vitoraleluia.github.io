@@ -1,19 +1,12 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import PostCard from '../../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const sortedPosts = allPosts.sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
-
-function formatDate(date: Date) {
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
 ---
 
 <StarlightPage frontmatter={{ title: 'Blog', template: 'splash' }}>
@@ -38,21 +31,7 @@ function formatDate(date: Date) {
     <!-- Articles List -->
     <div class="flex flex-col gap-5" id="articles-container">
       {sortedPosts.map((post) => (
-        <article class="flex flex-col p-5 bg-ctp-surface0/30 hover:bg-ctp-surface0/60 border border-ctp-surface0 hover:border-ctp-peach rounded-lg transition-colors duration-150">
-          <div class="flex items-center justify-between mb-2">
-            <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-ctp-overlay2">
-              {formatDate(post.data.pubDate)}
-            </time>
-          </div>
-          
-          <h2 class="text-xl font-semibold leading-snug mb-2 font-sans m-0">
-            <a href={`/blog/${post.id}/`} class="text-ctp-text hover:text-ctp-peach no-underline transition-colors duration-150">
-              {post.data.title}
-            </a>
-          </h2>
-
-          <p class="text-sm text-ctp-subtext0 leading-relaxed m-0">{post.data.description}</p>
-        </article>
+        <PostCard post={post} headingLevel="h2" />
       ))}
     </div>
   </div>

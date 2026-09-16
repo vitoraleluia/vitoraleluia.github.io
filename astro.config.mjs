@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://vitoraleluia.com',
+	prefetch: false,
 	integrations: [
 		starlight({
 			title: 'Vitor Aleluia',
@@ -41,7 +42,7 @@ export default defineConfig({
 					tag: 'link',
 					attrs: {
 						rel: 'preload',
-						href: '/fonts/open-sans-latin-700-normal.woff2',
+						href: '/fonts/open-sans-latin-600-normal.woff2',
 						as: 'font',
 						type: 'font/woff2',
 						crossorigin: 'anonymous',
@@ -51,7 +52,7 @@ export default defineConfig({
 					tag: 'link',
 					attrs: {
 						rel: 'preload',
-						href: '/fonts/libre-baskerville-latin-400-normal.woff2',
+						href: '/fonts/open-sans-latin-700-normal.woff2',
 						as: 'font',
 						type: 'font/woff2',
 						crossorigin: 'anonymous',

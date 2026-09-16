@@ -2,6 +2,7 @@
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import Avatar from '../components/Avatar.astro';
 import SocialIcons from '../components/SocialIcons.astro';
+import PostCard from '../components/PostCard.astro';
 import { siteConfig } from '../site.config';
 import { getCollection } from 'astro:content';
 
@@ -9,14 +10,6 @@ const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const recentPosts = allPosts
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
-
-function formatDate(date: Date) {
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
 ---
 
 <StarlightPage
@@ -83,24 +76,7 @@ function formatDate(date: Date) {
 
       <div class="flex flex-col gap-4">
         {recentPosts.map((post) => (
-          <article class="p-5 bg-ctp-surface0/30 hover:bg-ctp-surface0/60 border border-ctp-surface0 hover:border-ctp-peach rounded-lg transition-colors duration-150">
-            <div class="flex items-center justify-between gap-3 mb-1.5">
-              <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-ctp-overlay2">
-                {formatDate(post.data.pubDate)}
-              </time>
-              <div class="flex gap-1.5">
-                {post.data.tags.map((tag) => (
-                  <span class="text-xs font-mono text-ctp-subtext0">#{tag}</span>
-                ))}
-              </div>
-            </div>
-            <h3 class="text-lg font-semibold leading-snug mb-1.5 font-sans m-0">
-              <a href={`/blog/${post.id}/`} class="text-ctp-text hover:text-ctp-peach no-underline transition-colors duration-150">
-                {post.data.title}
-              </a>
-            </h3>
-            <p class="text-sm text-ctp-subtext0 leading-normal line-clamp-2 m-0">{post.data.description}</p>
-          </article>
+          <PostCard post={post} headingLevel="h3" />
         ))}
       </div>
     </section>

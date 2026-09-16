@@ -185,44 +185,27 @@ const isCurrent = (href: string) => {
     });
   }
 
-  // Ctrl+K / Cmd+K shortcut
-  document.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      if (window.innerWidth >= 680) {
-        desktopInput?.focus();
-      } else {
-        const toggleBtn = document.getElementById('mobile-nav-toggle');
-        const mobileMenu = document.getElementById('mobile-nav-menu');
-        if (toggleBtn && mobileMenu && (mobileMenu.hidden || !mobileMenu.classList.contains('is-open'))) {
-          toggleBtn.click();
-        }
-        setTimeout(() => {
-          mobileInput?.focus();
-        }, 50);
-      }
-    }
-  });
-
   // Mobile menu toggle & interactions
   const toggleBtn = document.getElementById('mobile-nav-toggle') as HTMLButtonElement | null;
   const mobileMenu = document.getElementById('mobile-nav-menu') as HTMLElement | null;
 
+  function openMenu() {
+    if (!toggleBtn || !mobileMenu) return;
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    toggleBtn.classList.add('is-active');
+    mobileMenu.classList.add('is-open');
+    mobileMenu.removeAttribute('hidden');
+  }
+
+  function closeMenu() {
+    if (!toggleBtn || !mobileMenu) return;
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    toggleBtn.classList.remove('is-active');
+    mobileMenu.classList.remove('is-open');
+    mobileMenu.setAttribute('hidden', '');
+  }
+
   if (toggleBtn && mobileMenu) {
-    const openMenu = () => {
-      toggleBtn.setAttribute('aria-expanded', 'true');
-      toggleBtn.classList.add('is-active');
-      mobileMenu.classList.add('is-open');
-      mobileMenu.removeAttribute('hidden');
-    };
-
-    const closeMenu = () => {
-      toggleBtn.setAttribute('aria-expanded', 'false');
-      toggleBtn.classList.remove('is-active');
-      mobileMenu.classList.remove('is-open');
-      mobileMenu.setAttribute('hidden', '');
-    };
-
     toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
@@ -243,26 +226,36 @@ const isCurrent = (href: string) => {
       }
     });
 
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && toggleBtn.getAttribute('aria-expanded') === 'true') {
-        closeMenu();
-        toggleBtn.focus();
-      }
-    });
-
     // Close on window resize to desktop viewport
     window.addEventListener('resize', () => {
       if (window.innerWidth >= 680 && toggleBtn.getAttribute('aria-expanded') === 'true') {
         closeMenu();
       }
-    });
+    }, { passive: true });
 
     // Close menu when clicking any navigation link inside mobile menu
     mobileMenu.querySelectorAll('.mobile-nav-link').forEach((link) => {
-      link.addEventListener('click', () => {
-        closeMenu();
-      });
+      link.addEventListener('click', closeMenu);
     });
   }
+
+  // Unified keyboard shortcut handler (Ctrl/Cmd+K for search, Escape to close menu)
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (window.innerWidth >= 680) {
+        desktopInput?.focus();
+      } else {
+        if (toggleBtn && mobileMenu && (mobileMenu.hidden || !mobileMenu.classList.contains('is-open'))) {
+          openMenu();
+        }
+        setTimeout(() => {
+          mobileInput?.focus();
+        }, 50);
+      }
+    } else if (e.key === 'Escape' && toggleBtn?.getAttribute('aria-expanded') === 'true') {
+      closeMenu();
+      toggleBtn.focus();
+    }
+  });
 </script>
