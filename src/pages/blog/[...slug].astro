@@ -5,18 +5,13 @@ import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
-  const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-  return sortedPosts.map((post, index) => ({
+  return posts.map((post) => ({
     params: { slug: post.id },
-    props: {
-      post,
-      prevPost: sortedPosts[index + 1] || null,
-      nextPost: sortedPosts[index - 1] || null,
-    },
+    props: { post },
   }));
 }
 
-const { post, prevPost, nextPost } = Astro.props;
+const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const hasHeadings = headings && headings.some((h) => h.depth >= 2 && h.depth <= 4);
 
@@ -80,38 +75,6 @@ function formatDate(date: Date) {
       <div class="prose dark:prose-invert prose-headings:font-sans prose-headings:text-ctp-text prose-headings:scroll-mt-24 prose-h2:text-2xl prose-h2:border-b prose-h2:border-ctp-surface0 prose-h2:pb-2 prose-h3:text-xl prose-p:font-serif prose-p:text-lg prose-p:leading-loose prose-p:text-ctp-subtext1 prose-a:text-ctp-peach prose-a:no-underline hover:prose-a:underline prose-code:font-mono prose-code:text-ctp-text prose-code:bg-ctp-mantle prose-code:border prose-code:border-ctp-surface0 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-ctp-mantle prose-pre:border prose-pre:border-ctp-surface0 prose-pre:rounded-lg prose-pre:text-[1.125rem] prose-pre:leading-relaxed prose-blockquote:border-l-2 prose-blockquote:border-l-ctp-peach prose-blockquote:text-ctp-subtext0 prose-blockquote:italic prose-li:text-ctp-subtext1 prose-li:font-serif prose-strong:text-ctp-text max-w-none">
         <Content />
       </div>
-
-      <!-- Post Footer / Next & Previous Navigation -->
-      <footer class="mt-16 pt-10 border-t border-ctp-surface0">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-          {prevPost ? (
-            <a href={`/blog/${prevPost.id}/`} class="flex flex-col gap-1.5 p-5 bg-ctp-surface0/30 hover:bg-ctp-surface0/60 border border-ctp-surface0 hover:border-ctp-peach rounded-lg transition-colors duration-150 no-underline">
-              <span class="font-mono text-xs text-ctp-peach">&larr; Older Article</span>
-              <span class="font-sans text-sm font-semibold text-ctp-text line-clamp-2 leading-snug">{prevPost.data.title}</span>
-            </a>
-          ) : (
-            <div class="hidden sm:block"></div>
-          )}
-
-          {nextPost ? (
-            <a href={`/blog/${nextPost.id}/`} class="flex flex-col gap-1.5 p-5 bg-ctp-surface0/30 hover:bg-ctp-surface0/60 border border-ctp-surface0 hover:border-ctp-peach rounded-lg transition-colors duration-150 no-underline text-right">
-              <span class="font-mono text-xs text-ctp-peach">Newer Article &rarr;</span>
-              <span class="font-sans text-sm font-semibold text-ctp-text line-clamp-2 leading-snug">{nextPost.data.title}</span>
-            </a>
-          ) : (
-            <div class="hidden sm:block"></div>
-          )}
-        </div>
-
-        <div class="flex items-center justify-between text-sm">
-          <a href="/blog/" class="text-ctp-subtext0 hover:text-ctp-peach no-underline transition-colors">
-            &larr; Return to Blog Directory
-          </a>
-          <a href="#_top" class="text-ctp-subtext0 hover:text-ctp-peach no-underline transition-colors">
-            Back to Top &uarr;
-          </a>
-        </div>
-      </footer>
       </article>
 
       <!-- Sidebar Index (Sticky) - only appears on desktop and wide tablet (lg: and above) -->
