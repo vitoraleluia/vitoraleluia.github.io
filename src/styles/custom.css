@@ -205,7 +205,7 @@ body {
   --ctp-mauve: #8839ef;
   --ctp-red: #d20f39;
   --ctp-maroon: #e64553;
-  --ctp-peach: #e0570b;
+  --ctp-peach: #fe640b;
   --ctp-yellow: #df8e1d;
   --ctp-green: #40a02b;
   --ctp-teal: #179299;
@@ -227,9 +227,9 @@ body {
   --ctp-crust: #dce0e8;
 
   /* Starlight Catppuccin Latte Theme Mapping (Peach Accent) */
-  --sl-color-accent: #e0570b;
+  --sl-color-accent: #fe640b;
   --sl-color-accent-high: #c2410c;
-  --sl-color-accent-low: rgba(224, 87, 11, 0.16);
+  --sl-color-accent-low: rgba(254, 100, 11, 0.16);
   --sl-color-bg: #eff1f5;
   --sl-color-bg-nav: #e6e9ef;
   --sl-color-black: #dce0e8;
@@ -243,7 +243,7 @@ body {
   --sl-color-gray-7: #e6e9ef;
 
   --sl-color-text: #11111b;
-  --sl-color-text-accent: #e0570b;
+  --sl-color-text-accent: #fe640b;
   --sl-color-text-invert: #eff1f5;
 
   /* Code Block & Inline Code (Catppuccin Latte) */
