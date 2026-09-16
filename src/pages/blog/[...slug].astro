@@ -1,6 +1,7 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
+import Tags from '../../components/Tags.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -31,10 +32,19 @@ function formatDate(date: Date) {
     template: 'splash',
   }}
 >
-  <div class="blog-post-wrapper w-full max-w-5xl xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
-    <div class="flex flex-col lg:flex-row justify-center gap-8 xl:gap-14 items-start">
+  <div class="blog-post-wrapper w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+    <div
+      class:list={[
+        hasHeadings
+          ? 'grid grid-cols-1 xl:grid-cols-[1fr_minmax(0,42rem)_1fr] gap-y-8 xl:gap-x-8 2xl:gap-x-12 items-start justify-center'
+          : 'max-w-2xl mx-auto'
+      ]}
+    >
+      <!-- Symmetrical Left Spacer (ensures article text is mathematically dead-centered like an e-reader) -->
+      {hasHeadings && <div class="hidden xl:block" aria-hidden="true" />}
+
       <!-- Article Main Column -->
-      <article class="w-full max-w-2xl min-w-0 mx-auto lg:mx-0">
+      <article class="w-full max-w-2xl min-w-0 mx-auto">
         <!-- Breadcrumb navigation -->
 
       <nav class="mb-8" aria-label="Breadcrumb">
@@ -49,25 +59,14 @@ function formatDate(date: Date) {
 
       <!-- Article Header -->
       <header class="pb-8 mb-10 border-b border-ctp-surface0">
-        <div class="flex items-center flex-wrap gap-2 font-mono text-xs text-ctp-overlay2 mb-3.5">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-ctp-text mb-4 font-sans leading-tight m-0">{post.data.title}</h1>
+
+        <Tags tags={post.data.tags} class="mb-4" />
+
+        <div class="font-mono text-xs text-ctp-overlay2">
           <time datetime={post.data.pubDate.toISOString()}>
             {formatDate(post.data.pubDate)}
           </time>
-          <span class="opacity-50">&bull;</span>
-          <span class="text-ctp-subtext0">{post.data.author}</span>
-        </div>
-
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-ctp-text mb-4 font-sans leading-tight m-0">{post.data.title}</h1>
-
-        <div class="flex flex-wrap gap-2">
-          {post.data.tags.map((tag) => (
-            <a
-              href={`/tags/${tag}/`}
-              class="font-mono text-xs text-ctp-subtext0 bg-ctp-surface0 border border-ctp-surface1 hover:border-ctp-peach hover:text-ctp-peach px-2 py-0.5 rounded transition-colors duration-150 no-underline"
-            >
-              #{tag}
-            </a>
-          ))}
         </div>
       </header>
 
@@ -77,10 +76,10 @@ function formatDate(date: Date) {
       </div>
       </article>
 
-      <!-- Sidebar Index (Sticky) - only appears on desktop and wide tablet (lg: and above) -->
+      <!-- Sidebar Index (Sticky) -->
       {hasHeadings && (
         <aside
-          class="sidebar-sticky-index hidden lg:block w-56 xl:w-64 shrink-0"
+          class="sidebar-sticky-index hidden xl:block w-56 2xl:w-64 justify-self-start"
           aria-label="In this page"
         >
           <div class="max-h-[calc(100vh-var(--sl-nav-height)-3rem)] overflow-y-auto pr-1">

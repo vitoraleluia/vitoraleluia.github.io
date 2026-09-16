@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import Tags from './Tags.astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -20,7 +21,7 @@ function formatDate(date: Date) {
 const HeadingTag = headingLevel;
 ---
 
-<article class:list={['flex flex-col p-5 bg-ctp-surface0/30 hover:bg-ctp-surface0/60 border border-ctp-surface0 hover:border-ctp-peach rounded-lg transition-colors duration-150', className]}>
+<article class:list={['flex flex-col p-5 bg-white dark:bg-ctp-surface0/30 hover:bg-white dark:hover:bg-ctp-surface0/60 border border-ctp-surface0/60 dark:border-ctp-surface0 hover:border-ctp-peach rounded-lg transition-all duration-150 shadow-xs hover:shadow-sm dark:shadow-none', className]}>
   <div class="mb-2">
     <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-ctp-overlay2">
       {formatDate(post.data.pubDate)}
@@ -35,16 +36,5 @@ const HeadingTag = headingLevel;
 
   <p class="text-sm text-ctp-subtext0 leading-relaxed m-0">{post.data.description}</p>
 
-  {post.data.tags && post.data.tags.length > 0 && (
-    <div class="flex flex-wrap gap-2 mt-3">
-      {post.data.tags.map((tag) => (
-        <a
-          href={`/tags/${tag}/`}
-          class="text-xs font-mono text-ctp-subtext0 hover:text-ctp-peach transition-colors duration-150 no-underline"
-        >
-          #{tag}
-        </a>
-      ))}
-    </div>
-  )}
+  <Tags tags={post.data.tags} class="mt-3" />
 </article>

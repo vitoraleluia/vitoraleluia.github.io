@@ -32,7 +32,6 @@ export const siteConfig = {
     googleAnalyticsId: '', // Paste GA4 Measurement ID (e.g., 'G-XXXXXXXXXX') here or via PUBLIC_GA_ID env
   },
   navLinks: [
-    { label: 'Home', href: '/' },
     { label: 'Blog', href: '/blog/' },
     { label: 'Links', href: '/links/' },
     { label: 'CV', href: '/cv.pdf', target: '_blank', rel: 'noopener noreferrer' },

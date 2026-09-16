@@ -1,0 +1,25 @@
+---
+interface Props {
+  tags?: string[];
+  class?: string;
+  tagClass?: string;
+}
+
+const { tags = [], class: className = '', tagClass = '' } = Astro.props;
+---
+
+{tags && tags.length > 0 && (
+  <div class:list={['flex flex-wrap gap-2', className]}>
+    {tags.map((tag) => (
+      <a
+        href={`/tags/${tag}/`}
+        class:list={[
+          'text-xs font-mono text-ctp-subtext0 hover:text-ctp-peach transition-colors duration-150 no-underline',
+          tagClass,
+        ]}
+      >
+        #{tag}
+      </a>
+    ))}
+  </div>
+)}
