@@ -95,16 +95,6 @@ html {
   --font-serif: 'Libre Baskerville', 'Iowan Old Style', 'Bitstream Charter', Charter, Georgia, Cambria, 'Times New Roman', serif;
   --font-mono: 'Cascadia Mono', 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Typography Scale (+2px across all utility tokens for optimal readability) */
-  --text-xs: 0.875rem; /* 14px */
-  --text-sm: 1rem; /* 16px */
-  --text-base: 1.125rem; /* 18px */
-  --text-lg: 1.25rem; /* 20px */
-  --text-xl: 1.375rem; /* 22px */
-  --text-2xl: 1.625rem; /* 26px */
-  --text-3xl: 2rem; /* 32px */
-  --text-4xl: 2.375rem; /* 38px */
-
   /* Catppuccin Theme Palette Tokens */
   --color-ctp-rosewater: var(--ctp-rosewater);
   --color-ctp-flamingo: var(--ctp-flamingo);
@@ -257,8 +247,6 @@ html[data-theme='light'] .astro-code span {
 /* Code Blocks and Code Tags in Blog Posts */
 .prose pre,
 .astro-code {
-  font-size: 1.125rem !important; /* 18px */
-  line-height: 1.75 !important;
   background-color: var(--ctp-mantle) !important;
   border: 1px solid var(--ctp-surface0) !important;
   border-radius: 0.5rem !important;
@@ -268,7 +256,6 @@ html[data-theme='light'] .astro-code span {
 
 .prose pre > code,
 .astro-code > code {
-  font-size: 1.125rem !important; /* 18px */
   background-color: transparent !important;
   padding: 0 !important;
   border: 0 !important;
