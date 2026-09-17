@@ -1,7 +1,11 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import defaultAvatar from '../assets/images/photo.jpg';
+
 interface Props {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  src?: string;
+  src?: ImageMetadata | string;
   alt?: string;
   class?: string;
 }
@@ -29,10 +33,25 @@ const sizeClassesMap = {
 
 const dim = dimensionMap[size];
 const sizeClasses = sizeClassesMap[size];
+
+// Resolve image: use imported Astro asset if src is default or not provided
+const isLocalAsset = !src || src === '/images/photo.jpg' || typeof src !== 'string';
+const imageAsset = isLocalAsset ? (typeof src === 'object' ? src : defaultAvatar) : null;
 ---
 
 <div class:list={['relative inline-block shrink-0 rounded-full border border-ctp-surface1 overflow-hidden', sizeClasses, className]}>
-  {src ? (
+  {imageAsset ? (
+    <Image
+      src={imageAsset}
+      alt={alt}
+      width={dim}
+      height={dim}
+      densities={[1, 2]}
+      class="w-full h-full rounded-full object-cover bg-ctp-mantle block"
+      loading="eager"
+      decoding="async"
+    />
+  ) : typeof src === 'string' ? (
     <img
       src={src}
       alt={alt}
@@ -40,6 +59,7 @@ const sizeClasses = sizeClassesMap[size];
       height={dim}
       class="w-full h-full rounded-full object-cover bg-ctp-mantle block"
       loading="eager"
+      decoding="async"
     />
   ) : (
     <div class="w-full h-full rounded-full bg-ctp-mantle block" aria-label={alt} role="img">

@@ -2,6 +2,9 @@
 import { siteConfig } from '../site.config';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Preloads from '../components/Preloads.astro';
+import Seo from '../components/Seo.astro';
+import ExternalScripts from '../components/ExternalScripts.astro';
 import '../styles/custom.css';
 import type { CollectionEntry } from 'astro:content';
 
@@ -18,76 +21,6 @@ const {
   image,
   post,
 } = Astro.props;
-
-const formattedTitle =
-  title === siteConfig.title
-    ? title
-    : `${title} - ${siteConfig.title}`;
-
-const siteUrl = Astro.site ? Astro.site.href.replace(/\/$/, '') : siteConfig.siteUrl.replace(/\/$/, '');
-const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
-const ogImageUrl = new URL(image || siteConfig.seo?.defaultOgImage || '/og-image.png', siteUrl).href;
-const rssUrl = new URL('/rss.xml', siteUrl).href;
-
-const googleVerification =
-  import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ||
-  siteConfig.seo?.googleSiteVerification;
-
-const bingVerification =
-  import.meta.env.PUBLIC_BING_SITE_VERIFICATION ||
-  siteConfig.seo?.bingSiteVerification;
-
-const gaId =
-  import.meta.env.PUBLIC_GA_ID ||
-  siteConfig.analytics?.googleAnalyticsId;
-
-// Schema.org Structured Data (JSON-LD)
-let structuredData: Record<string, unknown>;
-
-if (post) {
-  structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.data.title,
-    description: post.data.description,
-    author: {
-      '@type': 'Person',
-      name: post.data.author || siteConfig.name,
-      url: siteUrl,
-    },
-    publisher: {
-      '@type': 'Person',
-      name: siteConfig.name,
-      url: siteUrl,
-    },
-    datePublished: post.data.pubDate.toISOString(),
-    dateModified: (post.data.updatedDate || post.data.pubDate).toISOString(),
-    image: ogImageUrl,
-    url: canonicalUrl,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': canonicalUrl,
-    },
-    inLanguage: 'en-US',
-  };
-} else {
-  structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: siteConfig.title,
-    url: siteUrl,
-    description: siteConfig.description,
-    author: {
-      '@type': 'Person',
-      name: siteConfig.name,
-      jobTitle: siteConfig.role,
-      url: siteUrl,
-      sameAs: siteConfig.socialLinks
-        .filter((link) => link.href.startsWith('http'))
-        .map((link) => link.href),
-    },
-  };
-}
 ---
 
 <!doctype html>
@@ -97,49 +30,15 @@ if (post) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href={canonicalUrl} />
 
-    {/* Primary Page Title & Description */}
-    <title>{formattedTitle}</title>
-    <meta name="description" content={description} />
+    {/* Critical Preloads */}
+    <Preloads />
 
-    {/* Preloaded Fonts */}
-    <link rel="preload" href="/fonts/open-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-    <link rel="preload" href="/fonts/open-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-    <link rel="preload" href="/fonts/open-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-    <link rel="preload" href="/fonts/cascadia-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    {/* SEO Meta Tags, OpenGraph & Structured Data */}
+    <Seo title={title} description={description} image={image} post={post} />
 
-    {/* RSS Feed Auto-Discovery */}
-    <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={rssUrl} />
-
-    {/* Search Console Verifications */}
-    {googleVerification && <meta name="google-site-verification" content={googleVerification} />}
-    {bingVerification && <meta name="msvalidate.01" content={bingVerification} />}
-
-    {/* OpenGraph Meta Tags */}
-    <meta property="og:title" content={title === siteConfig.title ? siteConfig.title : title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:type" content={post ? 'article' : 'website'} />
-    <meta property="og:site_name" content={siteConfig.name} />
-    <meta property="og:image" content={ogImageUrl} />
-    {/* Google Analytics 4 */}
-    {gaId && (
-      <>
-        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
-        <script is:inline define:vars={{ gaId }}>
-          window.dataLayer = window.dataLayer || [];
-          function gtag() {
-            dataLayer.push(arguments);
-          }
-          gtag('js', new Date());
-          gtag('config', gaId);
-        </script>
-      </>
-    )}
-
-    {/* Schema.org Structured Data (JSON-LD) */}
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    {/* External Third-Party Scripts */}
+    <ExternalScripts />
 
     {/* Inline Theme Initializer (Prevents FOUC) */}
     <script is:inline>

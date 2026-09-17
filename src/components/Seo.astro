@@ -1,0 +1,107 @@
+---
+import { siteConfig } from '../site.config';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  post?: CollectionEntry<'blog'>;
+}
+
+const {
+  title = siteConfig.title,
+  description = siteConfig.description,
+  image,
+  post,
+} = Astro.props;
+
+const formattedTitle =
+  title === siteConfig.title
+    ? title
+    : `${title} - ${siteConfig.title}`;
+
+const siteUrl = Astro.site ? Astro.site.href.replace(/\/$/, '') : siteConfig.siteUrl.replace(/\/$/, '');
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = new URL(image || siteConfig.seo?.defaultOgImage || '/og-image.png', siteUrl).href;
+const rssUrl = new URL('/rss.xml', siteUrl).href;
+
+const googleVerification =
+  import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ||
+  siteConfig.seo?.googleSiteVerification;
+
+const bingVerification =
+  import.meta.env.PUBLIC_BING_SITE_VERIFICATION ||
+  siteConfig.seo?.bingSiteVerification;
+
+// Schema.org Structured Data (JSON-LD)
+let structuredData: Record<string, unknown>;
+
+if (post) {
+  structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.data.title,
+    description: post.data.description,
+    author: {
+      '@type': 'Person',
+      name: post.data.author || siteConfig.name,
+      url: siteUrl,
+    },
+    publisher: {
+      '@type': 'Person',
+      name: siteConfig.name,
+      url: siteUrl,
+    },
+    datePublished: post.data.pubDate.toISOString(),
+    dateModified: (post.data.updatedDate || post.data.pubDate).toISOString(),
+    image: ogImageUrl,
+    url: canonicalUrl,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+    inLanguage: 'en-US',
+  };
+} else {
+  structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteConfig.title,
+    url: siteUrl,
+    description: siteConfig.description,
+    author: {
+      '@type': 'Person',
+      name: siteConfig.name,
+      jobTitle: siteConfig.role,
+      url: siteUrl,
+      sameAs: siteConfig.socialLinks
+        .filter((link) => link.href.startsWith('http'))
+        .map((link) => link.href),
+    },
+  };
+}
+---
+
+<!-- Primary Page Title & Description -->
+<title>{formattedTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- RSS Feed Auto-Discovery -->
+<link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={rssUrl} />
+
+<!-- Search Console Verifications -->
+{googleVerification && <meta name="google-site-verification" content={googleVerification} />}
+{bingVerification && <meta name="msvalidate.01" content={bingVerification} />}
+
+<!-- OpenGraph Meta Tags -->
+<meta property="og:title" content={title === siteConfig.title ? siteConfig.title : title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:type" content={post ? 'article' : 'website'} />
+<meta property="og:site_name" content={siteConfig.name} />
+<meta property="og:image" content={ogImageUrl} />
+
+<!-- Schema.org Structured Data (JSON-LD) -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
