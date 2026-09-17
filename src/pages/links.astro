@@ -47,7 +47,7 @@ const links = [
 ---
 
 <BaseLayout title="Links">
-  <div class="max-w-md mx-auto px-5 pt-8 pb-14 flex flex-col items-center">
+  <div class="max-w-xl mx-auto px-5 pt-8 pb-14 flex flex-col items-center">
     <!-- Centered Header with Photo -->
     <header class="text-center mb-8 flex flex-col items-center">
       <div class="mb-5">
@@ -55,7 +55,7 @@ const links = [
       </div>
       <h1 class="text-2xl font-bold tracking-tight text-ctp-text font-sans mb-1.5 leading-tight m-0">{siteConfig.name}</h1>
       <p class="font-mono text-sm text-ctp-peach mb-3 m-0">{siteConfig.role}</p>
-      <p class="text-sm text-ctp-subtext0 leading-relaxed max-w-[34ch] m-0">
+      <p class="text-sm text-ctp-subtext0 leading-relaxed max-w-md m-0">
         Software engineer passionate about high-performance systems and developer tooling.
       </p>
     </header>
@@ -68,7 +68,7 @@ const links = [
           target={link.target}
           rel={link.rel}
           class:list={[
-            'flex items-center gap-4 px-4 py-3.5 rounded-lg text-ctp-text transition-all duration-150 no-underline group border',
+            'flex items-center gap-4 px-4 py-4 rounded-lg text-ctp-text transition-all duration-150 no-underline group border',
             link.featured
               ? 'bg-ctp-surface0/70 border-ctp-peach/70 hover:border-ctp-peach hover:bg-ctp-surface0'
               : 'bg-ctp-surface0/40 hover:bg-ctp-surface0/80 border-ctp-surface0 hover:border-ctp-peach',
