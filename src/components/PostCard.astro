@@ -23,18 +23,18 @@ const HeadingTag = headingLevel;
 
 <article class:list={['flex flex-col p-5 bg-white dark:bg-ctp-surface0/30 hover:bg-white dark:hover:bg-ctp-surface0/60 border border-ctp-surface0/60 dark:border-ctp-surface0 hover:border-ctp-peach rounded-lg transition-all duration-150 shadow-xs hover:shadow-sm dark:shadow-none', className]}>
   <div class="mb-2">
-    <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-ctp-overlay2">
+    <time datetime={post.data.pubDate.toISOString()} class="font-sans text-xs text-ctp-overlay2">
       {formatDate(post.data.pubDate)}
     </time>
   </div>
 
-  <HeadingTag class="text-lg font-semibold leading-snug mb-2 font-sans m-0">
+  <HeadingTag class="text-lg font-semibold leading-snug mb-2 font-serif m-0">
     <a href={`/blog/${post.id}/`} class="text-ctp-text hover:text-ctp-peach no-underline transition-colors duration-150">
       {post.data.title}
     </a>
   </HeadingTag>
 
-  <p class="text-sm text-ctp-subtext0 leading-relaxed m-0">{post.data.description}</p>
+  <p class="text-sm font-serif text-ctp-subtext0 leading-relaxed m-0">{post.data.description}</p>
 
-  <Tags tags={post.data.tags} class="mt-3" />
+  <Tags tags={post.data.tags} class="mt-3 font-mono" />
 </article>
