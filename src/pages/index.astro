@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Avatar from '../components/Avatar.astro';
 import PostCard from '../components/PostCard.astro';
+import SocialIcons from '../components/SocialIcons.astro';
 import { siteConfig } from '../site.config';
 import { getCollection } from 'astro:content';
 
@@ -9,6 +10,10 @@ const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const recentPosts = allPosts
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
+
+const emailLink = siteConfig.socialLinks.find((l) => l.icon === 'email')?.href ?? 'mailto:contact@vitoraleluia.com';
+const linkedinLink = siteConfig.socialLinks.find((l) => l.icon === 'linkedin')?.href ?? 'https://linkedin.com/in/vitoraleluia';
+const githubLink = siteConfig.socialLinks.find((l) => l.icon === 'github')?.href ?? 'https://github.com/VitorAleluia';
 ---
 
 <BaseLayout title={siteConfig.title}>
@@ -19,7 +24,39 @@ const recentPosts = allPosts
         <Avatar size="xl" src={siteConfig.avatar} />
       </div>
       <div class="flex flex-col gap-2.5">
-        <h1 class="text-4xl font-bold tracking-tight text-ctp-text font-sans leading-tight m-0">{siteConfig.name}</h1>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-4xl font-bold tracking-tight text-ctp-text font-sans leading-tight m-0">{siteConfig.name}</h1>
+          <div class="flex items-center gap-1 text-ctp-subtext0" aria-label="Social profiles and email">
+            <a
+              href={emailLink}
+              class="inline-flex items-center justify-center p-1.5 text-ctp-subtext0 hover:text-ctp-peach hover:bg-ctp-surface0/60 rounded-md transition-colors duration-150 no-underline"
+              aria-label="Email"
+              title="Email"
+            >
+              <SocialIcons icon="email" size={20} />
+            </a>
+            <a
+              href={linkedinLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center p-1.5 text-ctp-subtext0 hover:text-ctp-peach hover:bg-ctp-surface0/60 rounded-md transition-colors duration-150 no-underline"
+              aria-label="LinkedIn"
+              title="LinkedIn"
+            >
+              <SocialIcons icon="linkedin" size={20} />
+            </a>
+            <a
+              href={githubLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center p-1.5 text-ctp-subtext0 hover:text-ctp-peach hover:bg-ctp-surface0/60 rounded-md transition-colors duration-150 no-underline"
+              aria-label="GitHub"
+              title="GitHub"
+            >
+              <SocialIcons icon="github" size={20} />
+            </a>
+          </div>
+        </div>
         <p class="text-base text-ctp-subtext1 leading-relaxed m-0">
           {siteConfig.bio}
         </p>
