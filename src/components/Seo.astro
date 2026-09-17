@@ -25,6 +25,7 @@ const siteUrl = Astro.site ? Astro.site.href.replace(/\/$/, '') : siteConfig.sit
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 const ogImageUrl = new URL(image || siteConfig.seo?.defaultOgImage || '/og-image.png', siteUrl).href;
 const rssUrl = new URL('/rss.xml', siteUrl).href;
+const sitemapUrl = new URL('/sitemap-index.xml', siteUrl).href;
 
 const googleVerification =
   import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ||
@@ -88,8 +89,9 @@ if (post) {
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
 
-<!-- RSS Feed Auto-Discovery -->
+<!-- RSS Feed & Sitemap Auto-Discovery -->
 <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={rssUrl} />
+<link rel="sitemap" href={sitemapUrl} />
 
 <!-- Search Console Verifications -->
 {googleVerification && <meta name="google-site-verification" content={googleVerification} />}

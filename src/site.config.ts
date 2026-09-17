@@ -30,7 +30,7 @@ export const siteConfig = {
   },
   // Analytics
   analytics: {
-    googleAnalyticsId: '', // Paste GA4 Measurement ID (e.g., 'G-XXXXXXXXXX') here or via PUBLIC_GA_ID env
+    googleAnalyticsId: 'G-5ZN7Z7BT1J', // Paste GA4 Measurement ID (e.g., 'G-XXXXXXXXXX') here or via PUBLIC_GA_ID env
   },
   navLinks: [
     { label: 'Blog', href: '/blog/' },
