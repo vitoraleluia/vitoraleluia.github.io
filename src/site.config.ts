@@ -21,11 +21,12 @@ export const siteConfig = {
   role: 'Software Engineer',
   location: 'Portugal',
   cvUrl: '/cv.pdf',
+  avatar: '/images/photo.jpg',
   // SEO & Verification
   seo: {
     googleSiteVerification: '', // Paste Google Search Console verification code here or via PUBLIC_GOOGLE_SITE_VERIFICATION env
     bingSiteVerification: '',   // Optional Bing Webmaster verification code
-    defaultOgImage: '/og-image.png',
+    defaultOgImage: '/images/og-image.png',
   },
   // Analytics
   analytics: {
@@ -39,7 +40,7 @@ export const siteConfig = {
   socialLinks: [
     { label: 'GitHub', href: 'https://github.com/VitorAleluia', icon: 'github', description: 'Code and open source contributions' },
     { label: 'LinkedIn', href: 'https://linkedin.com/in/vitoraleluia', icon: 'linkedin', description: 'Work history and experience' },
-    { label: 'Email', href: 'mailto:contact@vitoraleluia.com', icon: 'email', description: 'Direct contact' },
+    { label: 'Email', href: 'mailto:vitoraleluia@outlook.com', icon: 'email', description: 'Direct contact' },
     { label: 'RSS Feed', href: '/rss.xml', icon: 'rss', description: 'RSS 2.0 Feed' },
   ] as SocialLink[],
 };
