@@ -1,5 +1,5 @@
 ---
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
@@ -16,12 +16,9 @@ const sortedTags = [...tagCounts.entries()].sort(
 );
 ---
 
-<StarlightPage
-  frontmatter={{
-    title: 'Tags - Blog',
-    description: 'Browse articles and technical writeups by tag',
-    template: 'splash',
-  }}
+<BaseLayout
+  title="Tags - Blog"
+  description="Browse articles and technical writeups by tag"
 >
   <div class="max-w-4xl mx-auto px-4 pt-10 pb-16">
     <!-- Breadcrumb navigation -->
@@ -63,4 +60,4 @@ const sortedTags = [...tagCounts.entries()].sort(
       ))}
     </div>
   </div>
-</StarlightPage>
+</BaseLayout>

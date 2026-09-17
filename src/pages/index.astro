@@ -1,5 +1,5 @@
 ---
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import Avatar from '../components/Avatar.astro';
 import PostCard from '../components/PostCard.astro';
 import { siteConfig } from '../site.config';
@@ -11,18 +11,7 @@ const recentPosts = allPosts
   .slice(0, 3);
 ---
 
-<StarlightPage
-  frontmatter={{
-    title: siteConfig.title,
-    template: 'splash',
-    head: [
-      {
-        tag: 'title',
-        content: siteConfig.title,
-      },
-    ],
-  }}
->
+<BaseLayout title={siteConfig.title}>
   <div class="max-w-4xl mx-auto px-4 pt-10 pb-16">
     <!-- Hero Section -->
     <section class="flex flex-col sm:flex-row items-start sm:items-center gap-7 sm:gap-9 pb-12 border-b border-ctp-surface0">
@@ -38,27 +27,6 @@ const recentPosts = allPosts
         <p class="text-sm text-ctp-subtext0 leading-normal m-0">
           I write technical articles about distributed systems, backend reliability, and developer tooling.
         </p>
-        
-        <div class="flex flex-wrap gap-2.5 mt-2">
-          <a href="/blog/" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md bg-ctp-peach text-white dark:text-ctp-base hover:opacity-90 transition-opacity duration-150 no-underline shadow-sm">
-            Read Blog
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
-          <a href="/links/" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-white dark:bg-ctp-surface0 text-ctp-text border border-ctp-surface0 dark:border-ctp-surface1 hover:bg-ctp-mantle/50 dark:hover:bg-ctp-surface1 hover:border-ctp-peach dark:hover:border-ctp-surface2 transition-all duration-150 no-underline shadow-xs dark:shadow-none">
-            Links
-          </a>
-          <a href={siteConfig.cvUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-transparent text-ctp-subtext0 border border-ctp-surface1 hover:text-ctp-peach hover:border-ctp-peach transition-colors duration-150 no-underline">
-            CV (PDF)
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <line x1="10" y1="14" x2="21" y2="3"></line>
-            </svg>
-          </a>
-        </div>
       </div>
     </section>
 
@@ -80,4 +48,4 @@ const recentPosts = allPosts
       </div>
     </section>
   </div>
-</StarlightPage>
+</BaseLayout>

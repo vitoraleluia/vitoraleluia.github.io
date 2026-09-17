@@ -1,7 +1,7 @@
 export interface SocialLink {
   label: string;
   href: string;
-  icon: 'github' | 'linkedin' | 'x' | 'email' | 'rss' | 'link';
+  icon: 'github' | 'linkedin' | 'email' | 'rss' | 'link';
   description?: string;
 }
 
@@ -39,7 +39,6 @@ export const siteConfig = {
   socialLinks: [
     { label: 'GitHub', href: 'https://github.com/VitorAleluia', icon: 'github', description: 'Code and open source contributions' },
     { label: 'LinkedIn', href: 'https://linkedin.com/in/vitoraleluia', icon: 'linkedin', description: 'Work history and experience' },
-    { label: 'X (Twitter)', href: 'https://x.com', icon: 'x', description: 'Occasional engineering notes' },
     { label: 'Email', href: 'mailto:contact@vitoraleluia.com', icon: 'email', description: 'Direct contact' },
     { label: 'RSS Feed', href: '/rss.xml', icon: 'rss', description: 'RSS 2.0 Feed' },
   ] as SocialLink[],

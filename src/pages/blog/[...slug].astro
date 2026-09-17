@@ -1,5 +1,5 @@
 ---
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import Tags from '../../components/Tags.astro';
 import { getCollection, render } from 'astro:content';
@@ -25,12 +25,10 @@ function formatDate(date: Date) {
 }
 ---
 
-<StarlightPage
-  frontmatter={{
-    title: post.data.title,
-    description: post.data.description,
-    template: 'splash',
-  }}
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  post={post}
 >
   <div class="blog-post-wrapper w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
     <div
@@ -46,34 +44,33 @@ function formatDate(date: Date) {
       <!-- Article Main Column -->
       <article class="w-full max-w-3xl min-w-0 mx-auto">
         <!-- Breadcrumb navigation -->
+        <nav class="mb-8" aria-label="Breadcrumb">
+          <a href="/blog/" class="inline-flex items-center gap-1.5 text-sm font-medium text-ctp-peach hover:underline no-underline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to all articles
+          </a>
+        </nav>
 
-      <nav class="mb-8" aria-label="Breadcrumb">
-        <a href="/blog/" class="inline-flex items-center gap-1.5 text-sm font-medium text-ctp-peach hover:underline no-underline">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-          Back to all articles
-        </a>
-      </nav>
+        <!-- Article Header -->
+        <header class="pb-8 mb-10 border-b border-ctp-surface0">
+          <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-ctp-text mb-4 font-sans leading-tight m-0">{post.data.title}</h1>
 
-      <!-- Article Header -->
-      <header class="pb-8 mb-10 border-b border-ctp-surface0">
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-ctp-text mb-4 font-sans leading-tight m-0">{post.data.title}</h1>
+          <Tags tags={post.data.tags} class="mb-4" />
 
-        <Tags tags={post.data.tags} class="mb-4" />
+          <div class="font-mono text-xs text-ctp-overlay2">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+          </div>
+        </header>
 
-        <div class="font-mono text-xs text-ctp-overlay2">
-          <time datetime={post.data.pubDate.toISOString()}>
-            {formatDate(post.data.pubDate)}
-          </time>
+        <!-- Article Content (Libre Baskerville serif font for editorial reading) -->
+        <div class="prose dark:prose-invert prose-headings:font-sans prose-headings:text-ctp-text prose-headings:scroll-mt-24 prose-h2:text-2xl prose-h2:border-b prose-h2:border-ctp-surface0 prose-h2:pb-2 prose-h3:text-xl prose-p:font-serif prose-p:text-lg prose-p:leading-loose prose-p:text-ctp-text prose-a:text-ctp-peach prose-a:no-underline hover:prose-a:underline prose-code:font-mono prose-code:text-ctp-text prose-code:bg-ctp-mantle prose-code:border prose-code:border-ctp-surface0 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-ctp-mantle prose-pre:border prose-pre:border-ctp-surface0 prose-pre:rounded-lg prose-pre:text-[1.125rem] prose-pre:leading-relaxed prose-blockquote:border-l-2 prose-blockquote:border-l-ctp-peach prose-blockquote:text-ctp-subtext0 prose-blockquote:italic prose-li:text-ctp-text prose-li:font-serif prose-strong:text-ctp-text max-w-none">
+          <Content />
         </div>
-      </header>
-
-      <!-- Article Content (Libre Baskerville serif font for editorial reading) -->
-      <div class="prose dark:prose-invert prose-headings:font-sans prose-headings:text-ctp-text prose-headings:scroll-mt-24 prose-h2:text-2xl prose-h2:border-b prose-h2:border-ctp-surface0 prose-h2:pb-2 prose-h3:text-xl prose-p:font-serif prose-p:text-lg prose-p:leading-loose prose-p:text-ctp-text prose-a:text-ctp-peach prose-a:no-underline hover:prose-a:underline prose-code:font-mono prose-code:text-ctp-text prose-code:bg-ctp-mantle prose-code:border prose-code:border-ctp-surface0 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-ctp-mantle prose-pre:border prose-pre:border-ctp-surface0 prose-pre:rounded-lg prose-pre:text-[1.125rem] prose-pre:leading-relaxed prose-blockquote:border-l-2 prose-blockquote:border-l-ctp-peach prose-blockquote:text-ctp-subtext0 prose-blockquote:italic prose-li:text-ctp-text prose-li:font-serif prose-strong:text-ctp-text max-w-none">
-        <Content />
-      </div>
       </article>
 
       <!-- Sidebar Index (Sticky) -->
@@ -82,12 +79,11 @@ function formatDate(date: Date) {
           class="sidebar-sticky-index hidden xl:block w-56 2xl:w-64 justify-self-start"
           aria-label="In this page"
         >
-          <div class="max-h-[calc(100vh-var(--sl-nav-height)-3rem)] overflow-y-auto pr-1">
+          <div class="max-h-[calc(100vh-3.75rem-3rem)] overflow-y-auto pr-1">
             <TableOfContents headings={headings} />
           </div>
         </aside>
       )}
     </div>
   </div>
-</StarlightPage>
-
+</BaseLayout>

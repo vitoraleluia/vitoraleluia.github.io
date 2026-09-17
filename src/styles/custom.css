@@ -5,7 +5,7 @@
   font-family: 'Open Sans';
   font-style: normal;
   font-display: swap;
-  font-weight: 400;
+  weight: 400;
   src: local('Open Sans Regular'), local('OpenSans-Regular'), url('/fonts/open-sans-latin-400-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
@@ -70,12 +70,25 @@
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
-@layer base, starlight, theme, components, utilities;
+@layer base, theme, components, utilities;
 
-@import '@astrojs/starlight-tailwind';
+@import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 @plugin '@tailwindcss/typography';
+
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: clip;
+  max-width: 100%;
+}
 
 @theme {
   --font-sans: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -83,14 +96,14 @@
   --font-mono: 'Cascadia Mono', 'Cascadia Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Typography Scale (+2px across all utility tokens for optimal readability) */
-  --text-xs: 0.875rem; /* 14px (was 12px / 0.75rem) */
-  --text-sm: 1rem; /* 16px (was 14px / 0.875rem) */
-  --text-base: 1.125rem; /* 18px (was 16px / 1rem) */
-  --text-lg: 1.25rem; /* 20px (was 18px / 1.125rem) */
-  --text-xl: 1.375rem; /* 22px (was 20px / 1.25rem) */
-  --text-2xl: 1.625rem; /* 26px (was 24px / 1.5rem) */
-  --text-3xl: 2rem; /* 32px (was 30px / 1.875rem) */
-  --text-4xl: 2.375rem; /* 38px (was 36px / 2.25rem) */
+  --text-xs: 0.875rem; /* 14px */
+  --text-sm: 1rem; /* 16px */
+  --text-base: 1.125rem; /* 18px */
+  --text-lg: 1.25rem; /* 20px */
+  --text-xl: 1.375rem; /* 22px */
+  --text-2xl: 1.625rem; /* 26px */
+  --text-3xl: 2rem; /* 32px */
+  --text-4xl: 2.375rem; /* 38px */
 
   /* Catppuccin Theme Palette Tokens */
   --color-ctp-rosewater: var(--ctp-rosewater);
@@ -123,9 +136,6 @@
 
 :root,
 :root[data-theme='dark'] {
-  --sl-font: var(--font-sans);
-  --sl-font-mono: var(--font-mono);
-
   /* Catppuccin Mocha Theme Palette (Dark) */
   --ctp-rosewater: #f5e0dc;
   --ctp-flamingo: #f2cdcd;
@@ -154,47 +164,7 @@
   --ctp-mantle: #181825;
   --ctp-crust: #11111b;
 
-  /* Starlight Catppuccin Mocha Theme Mapping (Peach Accent) */
-  --sl-color-accent: #fab387;
-  --sl-color-accent-high: #fcd7ba;
-  --sl-color-accent-low: rgba(250, 179, 135, 0.16);
-  --sl-color-bg: #1e1e2e;
-  --sl-color-bg-nav: #181825;
-  --sl-color-black: #11111b;
-  --sl-color-white: #cdd6f4;
-  --sl-color-gray-1: #bac2de;
-  --sl-color-gray-2: #a6adc8;
-  --sl-color-gray-3: #9399b2;
-  --sl-color-gray-4: #6c7086;
-  --sl-color-gray-5: #45475a;
-  --sl-color-gray-6: #313244;
-  --sl-color-gray-7: #181825;
-
-  --sl-color-text: #cdd6f4;
-  --sl-color-text-accent: #fab387;
-  --sl-color-text-invert: #1e1e2e;
-
-  /* Code Block & Inline Code (Catppuccin Mocha) */
-  --sl-text-code: 1.125rem; /* 18px (+4px from default 14px / 0.875rem) */
-  --sl-color-bg-inline-code: var(--ctp-mantle);
-  --ec-codeFontSize: 1.125rem;
-  --ec-codeBg: var(--ctp-mantle);
-  --ec-frm-edBg: var(--ctp-mantle);
-  --ec-frm-trmBg: var(--ctp-mantle);
-  --ec-frm-edActTabBg: var(--ctp-mantle);
-  --ec-brdCol: var(--ctp-surface0);
-  --ec-brdRad: 0.5rem;
-
-  --sl-nav-height: 3.75rem;
-}
-
-body {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  background-color: var(--sl-color-bg);
-  color: var(--sl-color-white);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --nav-height: 3.75rem;
 }
 
 :root[data-theme='light'] {
@@ -226,98 +196,19 @@ body {
   --ctp-mantle: #e6e9ef;
   --ctp-crust: #dce0e8;
 
-  /* Starlight Catppuccin Latte Theme Mapping (Peach Accent) */
-  --sl-color-accent: #fe640b;
-  --sl-color-accent-high: #c2410c;
-  --sl-color-accent-low: rgba(254, 100, 11, 0.16);
-  --sl-color-bg: #eff1f5;
-  --sl-color-bg-nav: #e6e9ef;
-  --sl-color-black: #dce0e8;
-  --sl-color-white: #11111b;
-  --sl-color-gray-1: #313244;
-  --sl-color-gray-2: #45475a;
-  --sl-color-gray-3: #585b70;
-  --sl-color-gray-4: #6c7086;
-  --sl-color-gray-5: #bcc0cc;
-  --sl-color-gray-6: #ccd0da;
-  --sl-color-gray-7: #e6e9ef;
-
-  --sl-color-text: #11111b;
-  --sl-color-text-accent: #fe640b;
-  --sl-color-text-invert: #eff1f5;
-
-  /* Code Block & Inline Code (Catppuccin Latte) */
-  --sl-text-code: 1.125rem; /* 18px (+4px from default 14px / 0.875rem) */
-  --sl-color-bg-inline-code: var(--ctp-mantle);
-  --ec-codeFontSize: 1.125rem;
-  --ec-codeBg: var(--ctp-mantle);
-  --ec-frm-edBg: var(--ctp-mantle);
-  --ec-frm-trmBg: var(--ctp-mantle);
-  --ec-frm-edActTabBg: var(--ctp-mantle);
-  --ec-brdCol: var(--ctp-surface0);
-  --ec-brdRad: 0.5rem;
+  --nav-height: 3.75rem;
 }
 
-/* Starlight Layout Resets for Custom Splash Pages */
-.content-panel:has(> .sl-container > #_top) {
-  display: none !important;
-}
-
-main footer.sl-flex:empty,
-main footer.sl-flex:has(> .meta:empty):has(> .pagination-links:empty) {
-  display: none !important;
-}
-
-.main-pane {
-  padding-inline: 0 !important;
-}
-
-.content-panel {
-  padding: 0 !important;
-}
-
-header.header {
-  height: var(--sl-nav-height) !important;
-  padding: 0 1.25rem !important;
-  background-color: var(--sl-color-bg-nav) !important;
-  border-bottom: 1px solid var(--sl-color-gray-6) !important;
-  display: flex !important;
-  align-items: center !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
-  z-index: 50 !important;
-}
-
-.main-frame {
-  padding-top: var(--sl-nav-height) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  min-height: calc(100vh - var(--sl-nav-height)) !important;
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-.main-frame > .lg\:sl-flex,
-.main-pane,
-main,
-.content-panel,
-.content-panel:not(:has(> .sl-container > #_top)),
-.content-panel > .sl-container,
-.sl-container {
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 1 auto !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-inline: 0 !important;
-}
-
-.sl-markdown-content {
-  flex: 1 0 auto;
-  width: 100% !important;
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  background-color: var(--ctp-base);
+  color: var(--ctp-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  max-width: 100%;
+  min-height: 100vh;
 }
 
 /* Custom Scrollbars */
@@ -341,7 +232,7 @@ main,
 
 /* Text Selection */
 ::selection {
-  background: var(--sl-color-accent-low);
+  background: rgba(250, 179, 135, 0.2);
   color: var(--color-ctp-text);
 }
 
@@ -350,27 +241,48 @@ main,
   navigation: auto;
 }
 
+/* Shiki Dual Themes (Catppuccin Mocha & Latte) */
+html[data-theme='dark'] .astro-code,
+html[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+html[data-theme='light'] .astro-code,
+html[data-theme='light'] .astro-code span {
+  color: var(--shiki-light) !important;
+  background-color: var(--shiki-light-bg) !important;
+}
+
 /* Code Blocks and Code Tags in Blog Posts */
 .prose pre,
-.expressive-code pre {
-  font-size: 1.125rem !important; /* 18px (increased 4px from default 14px / 0.875rem) */
+.astro-code {
+  font-size: 1.125rem !important; /* 18px */
   line-height: 1.75 !important;
   background-color: var(--ctp-mantle) !important;
+  border: 1px solid var(--ctp-surface0) !important;
+  border-radius: 0.5rem !important;
+  padding: 1rem 1.25rem !important;
+  overflow-x: auto;
 }
 
 .prose pre > code,
-.expressive-code pre > code,
-.expressive-code .ec-line .code {
+.astro-code > code {
   font-size: 1.125rem !important; /* 18px */
   background-color: transparent !important;
   padding: 0 !important;
   border: 0 !important;
+  font-family: var(--font-mono) !important;
 }
 
 /* Inline code tags use <pre> background color */
 .prose :not(pre) > code {
+  font-family: var(--font-mono) !important;
   background-color: var(--ctp-mantle) !important;
-  border: 1px solid var(--ctp-surface0);
+  border: 1px solid var(--ctp-surface0) !important;
+  padding: 0.125rem 0.375rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.95em !important;
 }
 
 /* Smooth Scrolling & Heading Anchor Offsets for Blog Post TOC */
@@ -381,7 +293,7 @@ main,
 }
 
 .prose :is(h1, h2, h3, h4, h5, h6)[id] {
-  scroll-margin-top: calc(var(--sl-nav-height, 3.75rem) + 1.5rem);
+  scroll-margin-top: calc(var(--nav-height, 3.75rem) + 1.5rem);
 }
 
 .toc-container::-webkit-scrollbar {
@@ -397,8 +309,6 @@ main,
 .sidebar-sticky-index {
   position: -webkit-sticky !important;
   position: sticky !important;
-  top: calc(var(--sl-nav-height, 3.75rem) + 1.5rem) !important;
+  top: calc(var(--nav-height, 3.75rem) + 1.5rem) !important;
   align-self: flex-start !important;
 }
-
-

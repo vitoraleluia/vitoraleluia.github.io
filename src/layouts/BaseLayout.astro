@@ -1,0 +1,179 @@
+---
+import { siteConfig } from '../site.config';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/custom.css';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  post?: CollectionEntry<'blog'>;
+}
+
+const {
+  title = siteConfig.title,
+  description = siteConfig.description,
+  image,
+  post,
+} = Astro.props;
+
+const formattedTitle =
+  title === siteConfig.title
+    ? title
+    : `${title} - ${siteConfig.title}`;
+
+const siteUrl = Astro.site ? Astro.site.href.replace(/\/$/, '') : siteConfig.siteUrl.replace(/\/$/, '');
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = new URL(image || siteConfig.seo?.defaultOgImage || '/og-image.png', siteUrl).href;
+const rssUrl = new URL('/rss.xml', siteUrl).href;
+
+const googleVerification =
+  import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ||
+  siteConfig.seo?.googleSiteVerification;
+
+const bingVerification =
+  import.meta.env.PUBLIC_BING_SITE_VERIFICATION ||
+  siteConfig.seo?.bingSiteVerification;
+
+const gaId =
+  import.meta.env.PUBLIC_GA_ID ||
+  siteConfig.analytics?.googleAnalyticsId;
+
+// Schema.org Structured Data (JSON-LD)
+let structuredData: Record<string, unknown>;
+
+if (post) {
+  structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.data.title,
+    description: post.data.description,
+    author: {
+      '@type': 'Person',
+      name: post.data.author || siteConfig.name,
+      url: siteUrl,
+    },
+    publisher: {
+      '@type': 'Person',
+      name: siteConfig.name,
+      url: siteUrl,
+    },
+    datePublished: post.data.pubDate.toISOString(),
+    dateModified: (post.data.updatedDate || post.data.pubDate).toISOString(),
+    image: ogImageUrl,
+    url: canonicalUrl,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+    inLanguage: 'en-US',
+  };
+} else {
+  structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteConfig.title,
+    url: siteUrl,
+    description: siteConfig.description,
+    author: {
+      '@type': 'Person',
+      name: siteConfig.name,
+      jobTitle: siteConfig.role,
+      url: siteUrl,
+      sameAs: siteConfig.socialLinks
+        .filter((link) => link.href.startsWith('http'))
+        .map((link) => link.href),
+    },
+  };
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {/* Primary Page Title & Description */}
+    <title>{formattedTitle}</title>
+    <meta name="description" content={description} />
+
+    {/* Preloaded Fonts */}
+    <link rel="preload" href="/fonts/open-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="/fonts/open-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="/fonts/open-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="/fonts/cascadia-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+    {/* RSS Feed Auto-Discovery */}
+    <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={rssUrl} />
+
+    {/* Search Console Verifications */}
+    {googleVerification && <meta name="google-site-verification" content={googleVerification} />}
+    {bingVerification && <meta name="msvalidate.01" content={bingVerification} />}
+
+    {/* OpenGraph Meta Tags */}
+    <meta property="og:title" content={title === siteConfig.title ? siteConfig.title : title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content={post ? 'article' : 'website'} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:image" content={ogImageUrl} />
+    {/* Google Analytics 4 */}
+    {gaId && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+        <script is:inline define:vars={{ gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
+
+    {/* Schema.org Structured Data (JSON-LD) */}
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+    {/* Inline Theme Initializer (Prevents FOUC) */}
+    <script is:inline>
+      (() => {
+        const storedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null;
+        const systemTheme = () =>
+          typeof window !== 'undefined' &&
+          window.matchMedia &&
+          window.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark';
+
+        const theme = storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : systemTheme();
+        document.documentElement.dataset.theme = theme;
+
+        if (typeof window !== 'undefined' && window.matchMedia) {
+          window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+            const stored = localStorage.getItem('theme');
+            if (!stored || (stored !== 'light' && stored !== 'dark')) {
+              document.documentElement.dataset.theme = e.matches ? 'light' : 'dark';
+            }
+          });
+        }
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-ctp-base text-ctp-text font-sans antialiased selection:bg-ctp-peach/20 selection:text-ctp-text">
+    <div id="_top" class="absolute top-0 left-0" aria-hidden="true"></div>
+    <header class="h-[3.75rem] px-5 bg-ctp-mantle/95 backdrop-blur-sm border-b border-ctp-surface0 flex items-center fixed top-0 left-0 right-0 z-50">
+      <Header />
+    </header>
+    <main class="grow pt-[3.75rem] flex flex-col w-full max-w-full overflow-x-clip">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

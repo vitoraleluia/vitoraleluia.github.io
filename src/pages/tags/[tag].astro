@@ -1,5 +1,5 @@
 ---
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
@@ -34,12 +34,9 @@ const postCount = posts.length;
 const countText = `${postCount} ${postCount === 1 ? 'post' : 'posts'}`;
 ---
 
-<StarlightPage
-  frontmatter={{
-    title: `#${tag} - Blog`,
-    description: `Articles tagged with #${tag} (${countText})`,
-    template: 'splash',
-  }}
+<BaseLayout
+  title={`#${tag} - Blog`}
+  description={`Articles tagged with #${tag} (${countText})`}
 >
   <div class="max-w-4xl mx-auto px-4 pt-10 pb-16">
     <!-- Breadcrumb navigation -->
@@ -82,4 +79,4 @@ const countText = `${postCount} ${postCount === 1 ? 'post' : 'posts'}`;
       </a>
     </footer>
   </div>
-</StarlightPage>
+</BaseLayout>

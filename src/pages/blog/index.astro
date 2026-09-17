@@ -1,5 +1,5 @@
 ---
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 
@@ -9,7 +9,7 @@ const sortedPosts = allPosts.sort(
 );
 ---
 
-<StarlightPage frontmatter={{ title: 'Blog', template: 'splash' }}>
+<BaseLayout title="Blog" description="Articles, notes, and technical writeups on distributed systems and software architecture.">
   <div class="max-w-4xl mx-auto px-4 pt-10 pb-16">
     <header class="mb-10 pb-6 border-b border-ctp-surface0">
       <div class="flex items-center justify-between gap-4 mb-2">
@@ -35,4 +35,4 @@ const sortedPosts = allPosts.sort(
       ))}
     </div>
   </div>
-</StarlightPage>
+</BaseLayout>

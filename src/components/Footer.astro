@@ -3,13 +3,17 @@ import { siteConfig } from '../site.config';
 import SocialIcons from './SocialIcons.astro';
 
 const currentYear = new Date().getFullYear();
+
+const footerLinks = siteConfig.socialLinks.filter(
+  (item) => item.icon === 'email' || item.icon === 'rss'
+);
 ---
 
 <footer class="w-full border-t border-ctp-surface0 mt-auto bg-ctp-mantle/30">
-  <div class="w-full px-6 sm:px-10 lg:px-16 py-6 sm:py-7 flex flex-col sm:flex-row items-center justify-between gap-4">
-    <!-- Contact Links -->
+  <div class="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-6 sm:py-7 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <!-- Contact Links (Email and RSS only) -->
     <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-      {siteConfig.socialLinks.map((item) => (
+      {footerLinks.map((item) => (
         <a
           href={item.href}
           target={item.href.startsWith('http') ? '_blank' : undefined}
@@ -24,7 +28,14 @@ const currentYear = new Date().getFullYear();
 
     <!-- Copyright -->
     <p class="font-mono text-xs text-ctp-overlay0 m-0 text-center sm:text-right shrink-0">
-      &copy; {currentYear} {siteConfig.name}
+      &copy; <span id="footer-year">{currentYear}</span> {siteConfig.name} - Todos os direitos reservados
     </p>
   </div>
 </footer>
+
+<script>
+  const yearEl = document.getElementById('footer-year');
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear().toString();
+  }
+</script>
