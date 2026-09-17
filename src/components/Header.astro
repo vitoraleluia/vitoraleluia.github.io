@@ -10,14 +10,15 @@ const isCurrent = (href: string) => {
 ---
 
 <div class="w-full max-w-7xl h-full mx-auto flex items-center justify-between gap-6 relative">
-  <!-- Brand / Name -->
-  <div class="flex items-center gap-8">
-    <a href="/" class="inline-flex items-center font-sans text-lg font-bold text-ctp-text hover:text-ctp-peach tracking-tight transition-colors duration-150 no-underline">
-      <span>{siteConfig.name}</span>
-    </a>
+  <!-- Brand / Name (Left) -->
+  <a href="/" class="inline-flex items-center font-sans text-lg font-bold text-ctp-text hover:text-ctp-peach tracking-tight transition-colors duration-150 no-underline shrink-0">
+    <span>{siteConfig.name}</span>
+  </a>
 
+  <!-- Right Controls: Desktop Nav Links + Search + Theme Toggle + Mobile Toggle -->
+  <div class="flex items-center gap-3 sm:gap-4">
     <!-- Desktop Nav Links -->
-    <nav class="hidden min-[680px]:flex items-center gap-3" aria-label="Main Navigation">
+    <nav class="hidden min-[680px]:flex items-center gap-1 sm:gap-2" aria-label="Main Navigation">
       {siteConfig.navLinks.map((link) => (
         <a
           href={link.href}
@@ -41,10 +42,9 @@ const isCurrent = (href: string) => {
         </a>
       ))}
     </nav>
-  </div>
 
-  <!-- Right Controls: Desktop Search + Theme Toggle + Mobile Toggle -->
-  <div class="flex items-center gap-3">
+    <div class="hidden min-[680px]:block w-px h-5 bg-ctp-surface1 mx-0.5" aria-hidden="true" />
+
     <!-- Desktop DuckDuckGo Search (Hidden on mobile) -->
     <form
       id="ddg-search-form"
@@ -62,14 +62,14 @@ const isCurrent = (href: string) => {
       <input
         id="ddg-search-input"
         type="search"
-        placeholder="Search (DuckDuckGo)..."
+        placeholder="Search..."
         autocomplete="off"
         spellcheck="false"
         aria-label="Search this blog using DuckDuckGo"
-        class="w-44 focus:w-56 h-8 pl-8 pr-11 text-xs font-sans text-ctp-text placeholder-ctp-overlay0 bg-ctp-surface0 border border-ctp-surface1 rounded-md outline-none focus:border-ctp-peach transition-all duration-200"
+        class="w-48 sm:w-52 focus:w-60 h-8 pl-8 pr-12 text-xs font-sans text-ctp-text placeholder-ctp-overlay0 bg-ctp-surface0 border border-ctp-surface1 rounded-md outline-none focus:border-ctp-peach transition-all duration-200"
       />
       <input type="hidden" name="q" id="ddg-final-query" value="" />
-      <kbd class="absolute right-2 font-mono text-[12px] px-1.5 py-0.5 border border-ctp-surface1 rounded text-ctp-overlay0 bg-ctp-mantle pointer-events-none" aria-hidden="true">Ctrl K</kbd>
+      <kbd class="absolute right-2 font-mono text-[11px] px-1.5 py-0.5 border border-ctp-surface1 rounded text-ctp-overlay0 bg-ctp-mantle pointer-events-none" aria-hidden="true">Ctrl K</kbd>
     </form>
 
     <div class="flex items-center">
@@ -115,7 +115,7 @@ const isCurrent = (href: string) => {
       <input
         id="mobile-ddg-search-input"
         type="search"
-        placeholder="Search with DuckDuckGo..."
+        placeholder="Search..."
         autocomplete="off"
         spellcheck="false"
         aria-label="Search this blog using DuckDuckGo"
