@@ -29,12 +29,12 @@ The website adapts the `@astrojs/starlight` template away from a documentation f
   - Accent color: Refined warm copper/amber (`#e2a05a`)
   - Foreground text: `#ededed` (high contrast) and `#a1a1aa` (muted)
 - **High-Contrast Theming**: Primary buttons dynamically adjust foreground text for high contrast (dark text `#121214` in dark mode, crisp white text `#ffffff` in light mode against warm amber `#b45309`).
-- **Favicon**: Branded SVG favicon displaying the initials "VA" in Open Sans bold typography with the site accent color on a dark base.
+- **Favicon**: Branded SVG favicon displaying the initials "VA" in Geist bold typography with the site accent color on a dark base.
 
 ### 2.2 Typography Hierarchy
-- **Sans-serif (Headings & UI)**: `Open Sans` (self-hosted local woff2)
-- **Serif (Editorial Body & Reading)**: `Libre Baskerville` (self-hosted local woff2)
-- **Monospaced (Code & Metadata)**: `Cascadia Mono` (self-hosted local woff2)
+- **Sans-serif (Headings & UI)**: `Geist` (self-hosted local woff2)
+- **Serif (Editorial Body & Reading)**: `Source Serif 4` (self-hosted local woff2)
+- **Monospaced (Code & Metadata)**: `Geist Mono` (self-hosted local woff2)
 
 ### 2.3 Site Structure & Pages
 1. **Homepage (`/`)**:
@@ -48,8 +48,8 @@ The website adapts the `@astrojs/starlight` template away from a documentation f
    - RSS feed link badge aligned inline with the "Blog" section title.
 3. **Blog Post Reader (`/blog/[slug]`)**:
    - Optimized for reading comfort (max-width `48rem`).
-   - Body typography in `Libre Baskerville`.
-   - Expressive Code syntax highlighting using `Cascadia Mono`.
+   - Body typography in `Source Serif 4`.
+   - Expressive Code syntax highlighting using `Geist Mono`.
    - Older / Newer post navigation links at the footer.
 4. **Links Hub (`/links`)**:
    - Linktree-style page.
