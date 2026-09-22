@@ -27,14 +27,6 @@ const ogImageUrl = new URL(image || siteConfig.seo?.defaultOgImage || '/og-image
 const rssUrl = new URL('/rss.xml', siteUrl).href;
 const sitemapUrl = new URL('/sitemap-index.xml', siteUrl).href;
 
-const googleVerification =
-  import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ||
-  siteConfig.seo?.googleSiteVerification;
-
-const bingVerification =
-  import.meta.env.PUBLIC_BING_SITE_VERIFICATION ||
-  siteConfig.seo?.bingSiteVerification;
-
 // Schema.org Structured Data (JSON-LD)
 let structuredData: Record<string, unknown>;
 
@@ -92,10 +84,6 @@ if (post) {
 <!-- RSS Feed & Sitemap Auto-Discovery -->
 <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={rssUrl} />
 <link rel="sitemap" href={sitemapUrl} />
-
-<!-- Search Console Verifications -->
-{googleVerification && <meta name="google-site-verification" content={googleVerification} />}
-{bingVerification && <meta name="msvalidate.01" content={bingVerification} />}
 
 <!-- OpenGraph Meta Tags -->
 <meta property="og:title" content={title === siteConfig.title ? siteConfig.title : title} />

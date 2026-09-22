@@ -24,8 +24,6 @@ export const siteConfig = {
   avatar: '/images/photo.jpg',
   // SEO & Verification
   seo: {
-    googleSiteVerification: '', // Paste Google Search Console verification code here or via PUBLIC_GOOGLE_SITE_VERIFICATION env
-    bingSiteVerification: '',   // Optional Bing Webmaster verification code
     defaultOgImage: '/images/og-image.png',
   },
   // Analytics
