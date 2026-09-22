@@ -24,6 +24,8 @@ export async function GET(context: APIContext) {
       pubDate: post.data.pubDate,
       description: post.data.description,
       link: `/blog/${post.id}/`,
+      categories: post.data.tags || [],
+      author: siteConfig.name,
       content: sanitizeHtml(parser.render(post.body || ''), {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'h3', 'pre', 'code']),
       }),

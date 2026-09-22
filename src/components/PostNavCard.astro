@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  direction: 'prev' | 'next';
+  label?: string;
+}
+
+const { post, direction, label } = Astro.props;
+const isNext = direction === 'next';
+const defaultLabel = isNext ? 'Newer Post →' : '← Older Post';
+---
+
+<a
+  href={`/blog/${post.id}/`}
+  class:list={[
+    'flex flex-col p-4 rounded-lg border border-ctp-surface0 hover:border-ctp-peach bg-white dark:bg-ctp-surface0/30 hover:bg-white dark:hover:bg-ctp-surface0/60 transition-all duration-150 no-underline group shadow-xs dark:shadow-none',
+    isNext && 'items-end text-right sm:col-start-2',
+  ]}
+>
+  <span class="text-xs font-mono text-ctp-overlay2 mb-1 flex items-center gap-1">
+    {label ?? defaultLabel}
+  </span>
+  <span class="text-sm font-semibold text-ctp-text group-hover:text-ctp-peach transition-colors line-clamp-2">
+    {post.data.title}
+  </span>
+</a>

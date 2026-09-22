@@ -11,9 +11,9 @@ const recentPosts = allPosts
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 
-const emailLink = siteConfig.socialLinks.find((l) => l.icon === 'email')?.href ?? 'mailto:contact@vitoraleluia.com';
-const linkedinLink = siteConfig.socialLinks.find((l) => l.icon === 'linkedin')?.href ?? 'https://linkedin.com/in/vitoraleluia';
-const githubLink = siteConfig.socialLinks.find((l) => l.icon === 'github')?.href ?? 'https://github.com/VitorAleluia';
+const emailLink = siteConfig.links.email.href;
+const linkedinLink = siteConfig.links.linkedin.href;
+const githubLink = siteConfig.links.github.href;
 ---
 
 <BaseLayout title={siteConfig.title}>

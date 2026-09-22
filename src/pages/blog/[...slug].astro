@@ -2,17 +2,31 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import Tags from '../../components/Tags.astro';
-import { getCollection, render } from 'astro:content';
+import PostNavCard from '../../components/PostNavCard.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }));
+  const sorted = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+  return sorted.map((post, index) => {
+    const nextPost = index > 0 ? sorted[index - 1] : null;
+    const prevPost = index < sorted.length - 1 ? sorted[index + 1] : null;
+
+    return {
+      params: { slug: post.id },
+      props: { post, prevPost, nextPost },
+    };
+  });
 }
 
-const { post } = Astro.props;
+interface Props {
+  post: CollectionEntry<'blog'>;
+  prevPost: CollectionEntry<'blog'> | null;
+  nextPost: CollectionEntry<'blog'> | null;
+}
+
+const { post, prevPost, nextPost } = Astro.props;
 const { Content, headings } = await render(post);
 const hasHeadings = headings && headings.some((h) => h.depth >= 2 && h.depth <= 4);
 
@@ -68,9 +82,23 @@ function formatDate(date: Date) {
         </header>
 
         <!-- Article Content (Source Serif 4 serif font for editorial reading) -->
-        <div class="prose dark:prose-invert prose-headings:font-sans prose-headings:text-ctp-text prose-headings:scroll-mt-24 prose-h2:text-2xl prose-h2:border-b prose-h2:border-ctp-surface0 prose-h2:pb-2 prose-h3:text-xl prose-p:font-serif prose-p:text-base prose-p:leading-relaxed prose-p:text-ctp-text prose-a:text-ctp-peach prose-a:no-underline hover:prose-a:underline prose-code:font-mono prose-code:text-ctp-text prose-code:bg-ctp-mantle prose-code:border prose-code:border-ctp-surface0 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-ctp-mantle prose-pre:border prose-pre:border-ctp-surface0 prose-pre:rounded-lg prose-pre:leading-relaxed prose-blockquote:border-l-2 prose-blockquote:border-l-ctp-peach prose-blockquote:text-ctp-subtext0 prose-blockquote:italic prose-li:text-ctp-text prose-li:font-serif prose-strong:text-ctp-text max-w-none">
+        <div class="prose dark:prose-invert prose-headings:font-sans prose-headings:text-ctp-text prose-headings:scroll-mt-24 prose-h2:text-2xl prose-h2:border-b prose-h2:border-ctp-surface0 prose-h2:pb-2 prose-h3:text-xl prose-p:font-serif prose-p:text-base prose-p:leading-relaxed prose-p:text-ctp-text prose-a:text-ctp-peach prose-a:no-underline hover:prose-a:underline prose-code:font-mono prose-code:text-ctp-text prose-code:bg-ctp-mantle prose-code:border prose-code:border-ctp-surface0 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-ctp-mantle prose-pre:border prose-pre:border-ctp-surface0 prose-pre:rounded-lg prose-pre:leading-relaxed prose-blockquote:border-l-2 prose-blockquote:border-l-ctp-peach prose-blockquote:text-ctp-subtext0 prose-blockquote:italic prose-li:text-ctp-text prose-li:font-serif prose-strong:text-ctp-text prose-img:rounded-lg prose-img:border prose-img:border-ctp-surface0 prose-img:mx-auto max-w-none">
           <Content />
         </div>
+
+        <!-- Previous & Next Post Navigation -->
+        {(prevPost || nextPost) && (
+          <nav class="mt-14 pt-8 border-t border-ctp-surface0 grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label="Adjacent Posts">
+            {prevPost ? (
+              <PostNavCard post={prevPost} direction="prev" />
+            ) : <div />}
+
+            {nextPost && (
+              <PostNavCard post={nextPost} direction="next" />
+            )}
+          </nav>
+        )}
+
       </article>
 
       <!-- Sidebar Index (Sticky) -->

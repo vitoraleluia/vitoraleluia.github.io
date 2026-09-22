@@ -11,14 +11,12 @@ import type { CollectionEntry } from 'astro:content';
 interface Props {
   title?: string;
   description?: string;
-  image?: string;
   post?: CollectionEntry<'blog'>;
 }
 
 const {
   title = siteConfig.title,
   description = siteConfig.description,
-  image,
   post,
 } = Astro.props;
 ---
@@ -29,13 +27,15 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#1e1e2e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#eff1f5" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     {/* Critical Preloads */}
     <Preloads />
 
     {/* SEO Meta Tags, OpenGraph & Structured Data */}
-    <Seo title={title} description={description} image={image} post={post} />
+    <Seo title={title} description={description} post={post} />
 
     {/* External Third-Party Scripts */}
     <ExternalScripts />

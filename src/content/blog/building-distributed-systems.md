@@ -3,7 +3,6 @@ title: "Pragmatic Lessons in Distributed Systems & Reliability"
 description: "Observations and trade-offs learned while designing resilient backend services and dealing with edge networking."
 pubDate: 2026-09-02
 tags: ["systems", "architecture", "distributed-systems"]
-author: "Vitor Aleluia"
 ---
 
 When building distributed services, the fallacies of distributed computing remain ever-present: the network is never reliable, latency is never zero, and bandwidth is never infinite.

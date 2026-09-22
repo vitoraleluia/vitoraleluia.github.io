@@ -11,7 +11,6 @@ export const collections = {
 			updatedDate: z.coerce.date().optional(),
 			tags: z.array(z.string()).default([]),
 			draft: z.boolean().default(false),
-			author: z.string().default('Vitor Aleluia'),
 		}),
 	}),
 };

@@ -4,9 +4,7 @@ import SocialIcons from './SocialIcons.astro';
 
 const currentYear = new Date().getFullYear();
 
-const footerLinks = siteConfig.socialLinks.filter(
-  (item) => item.icon === 'email' || item.icon === 'rss'
-);
+const footerLinks = [siteConfig.links.email, siteConfig.links.rss];
 ---
 
 <footer class="w-full border-t border-ctp-surface0 mt-auto bg-ctp-mantle/30">

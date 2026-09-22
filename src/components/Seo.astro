@@ -5,75 +5,50 @@ import type { CollectionEntry } from 'astro:content';
 interface Props {
   title?: string;
   description?: string;
-  image?: string;
   post?: CollectionEntry<'blog'>;
 }
 
 const {
   title = siteConfig.title,
   description = siteConfig.description,
-  image,
   post,
 } = Astro.props;
 
-const formattedTitle =
-  title === siteConfig.title
-    ? title
-    : `${title} - ${siteConfig.title}`;
-
 const siteUrl = Astro.site ? Astro.site.href.replace(/\/$/, '') : siteConfig.siteUrl.replace(/\/$/, '');
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
+
+const formattedTitle = isHome
+  ? (siteConfig.homeTitle || siteConfig.title)
+  : title === siteConfig.title
+    ? siteConfig.title
+    : `${title} — ${siteConfig.title}`;
+
+const shareTitle = isHome
+  ? (siteConfig.homeTitle || siteConfig.title)
+  : title;
+
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
-const ogImageUrl = new URL(image || siteConfig.seo?.defaultOgImage || '/og-image.png', siteUrl).href;
+
 const rssUrl = new URL('/rss.xml', siteUrl).href;
 const sitemapUrl = new URL('/sitemap-index.xml', siteUrl).href;
 
 // Schema.org Structured Data (JSON-LD)
-let structuredData: Record<string, unknown>;
-
-if (post) {
-  structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.data.title,
-    description: post.data.description,
-    author: {
-      '@type': 'Person',
-      name: post.data.author || siteConfig.name,
+const structuredData = post
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.data.title,
+      description: post.data.description,
+      datePublished: post.data.pubDate.toISOString(),
+      dateModified: (post.data.updatedDate || post.data.pubDate).toISOString(),
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteConfig.title,
       url: siteUrl,
-    },
-    publisher: {
-      '@type': 'Person',
-      name: siteConfig.name,
-      url: siteUrl,
-    },
-    datePublished: post.data.pubDate.toISOString(),
-    dateModified: (post.data.updatedDate || post.data.pubDate).toISOString(),
-    image: ogImageUrl,
-    url: canonicalUrl,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': canonicalUrl,
-    },
-    inLanguage: 'en-US',
-  };
-} else {
-  structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: siteConfig.title,
-    url: siteUrl,
-    description: siteConfig.description,
-    author: {
-      '@type': 'Person',
-      name: siteConfig.name,
-      jobTitle: siteConfig.role,
-      url: siteUrl,
-      sameAs: siteConfig.socialLinks
-        .filter((link) => link.href.startsWith('http'))
-        .map((link) => link.href),
-    },
-  };
-}
+      description: siteConfig.description,
+    };
 ---
 
 <!-- Primary Page Title & Description -->
@@ -86,12 +61,28 @@ if (post) {
 <link rel="sitemap" href={sitemapUrl} />
 
 <!-- OpenGraph Meta Tags -->
-<meta property="og:title" content={title === siteConfig.title ? siteConfig.title : title} />
+<meta property="og:site_name" content={siteConfig.name} />
+<meta property="og:title" content={shareTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:type" content={post ? 'article' : 'website'} />
-<meta property="og:site_name" content={siteConfig.name} />
-<meta property="og:image" content={ogImageUrl} />
+<meta property="og:locale" content="en_US" />
+
+<!-- Article-Specific OpenGraph Tags -->
+{post && (
+  <>
+    <meta property="article:published_time" content={post.data.pubDate.toISOString()} />
+    <meta property="article:modified_time" content={(post.data.updatedDate || post.data.pubDate).toISOString()} />
+    {post.data.tags?.map((tag) => (
+      <meta property="article:tag" content={tag} />
+    ))}
+  </>
+)}
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={shareTitle} />
+<meta name="twitter:description" content={description} />
 
 <!-- Schema.org Structured Data (JSON-LD) -->
 <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

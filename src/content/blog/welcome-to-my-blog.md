@@ -3,7 +3,6 @@ title: "Welcome to My Blog: Engineering, Architecture, and Notes"
 description: "An introduction to this website, why I decided to build it with Astro, and what I plan to share here."
 pubDate: 2026-09-15
 tags: ["personal", "meta", "web-development"]
-author: "Vitor Aleluia"
 ---
 
 Welcome to my personal website and blog!

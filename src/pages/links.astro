@@ -13,19 +13,19 @@ const links = [
   },
   {
     title: "Email",
-    href: "mailto:contact@vitoraleluia.dev",
+    href: siteConfig.links.email.href,
     icon: "email" as const,
   },
   {
     title: "LinkedIn",
-    href: "https://linkedin.com/in/vitoraleluia",
+    href: siteConfig.links.linkedin.href,
     icon: "linkedin" as const,
     target: "_blank",
     rel: "noopener noreferrer",
   },
   {
     title: "GitHub",
-    href: "https://github.com/VitorAleluia",
+    href: siteConfig.links.github.href,
     icon: "github" as const,
     target: "_blank",
     rel: "noopener noreferrer",
@@ -40,7 +40,10 @@ const links = [
 ];
 ---
 
-<BaseLayout title="Links">
+<BaseLayout
+  title="Links"
+  description="Quick links, verified social profiles, CV, and contact details for Vitor Aleluia."
+>
   <div class="max-w-xl mx-auto px-5 pt-8 pb-14 flex flex-col items-center">
     <!-- Centered Header with Photo -->
     <header class="text-center mb-8 flex flex-col items-center">

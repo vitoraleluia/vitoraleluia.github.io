@@ -3,7 +3,6 @@ title: "Developer Ergonomics: Blending TypeScript with Rust"
 description: "How combining type safety and zero-cost abstractions across stacks elevates developer ergonomics and system reliability."
 pubDate: 2026-08-18
 tags: ["typescript", "rust", "tooling"]
-author: "Vitor Aleluia"
 ---
 
 Writing robust software doesn't have to come at the expense of developer happiness. Over the past several years, the software engineering landscape has seen a significant shift towards expressive, static type systems.
